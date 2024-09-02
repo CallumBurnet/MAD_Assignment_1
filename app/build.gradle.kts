@@ -15,6 +15,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        viewBinding{
+            enable = true
+        }
     }
 
     buildTypes {

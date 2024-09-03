@@ -14,8 +14,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>();
-
-
+    var numRows = 6;
+    var numCols = 7;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,19 +24,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         cells.addAll(List(42){index ->
-            Cell(index, index, R.drawable.cell_image)
+            val row  = index/numCols
+            val col = index%numCols
+            Cell(row, col,0)
         })
         adapter = CellAdapter(cells){cell ->
-            Toast.makeText(this, cell.col, Toast.LENGTH_SHORT).show()
+            cell.player = 1;
+            Toast.makeText(this, "Row: ${cell.row}, Col: ${cell.col}, Player: ${cell.player}", Toast.LENGTH_SHORT).show()
+
         }
-        binding.recyclerView.layoutManager = GridLayoutManager(this, 7)
+        binding.recyclerView.layoutManager = GridLayoutManager(this,numCols )
         binding.recyclerView.adapter = adapter
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
     }
 
 }

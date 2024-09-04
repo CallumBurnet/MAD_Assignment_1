@@ -1,59 +1,73 @@
 package com.example.mad_assignment_1
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.example.mad_assignment_1.databinding.FragmentNewGameBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NewGame.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NewGame : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentNewGameBinding
+    private lateinit var menuViewModel: MenuInformationModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_game, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewGame.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewGame().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    ): View {
+        binding = FragmentNewGameBinding.inflate(inflater, container, false)
+        menuViewModel = ViewModelProvider(requireActivity())[MenuInformationModel::class.java]
+        when (menuViewModel.gridSize.value) {
+            MenuInformationModel.GridSize.SMALL -> binding.smallGridRadio.isChecked = true
+            MenuInformationModel.GridSize.STANDARD -> binding.standardGridRadio.isChecked = true
+            MenuInformationModel.GridSize.LARGE -> binding.largeGridRadio.isChecked = true
+            else -> binding.standardGridRadio.isChecked = true
+        }
+        binding.launchGameButton.setOnClickListener { view ->
+            val intent = Intent(view.context, GameActivity::class.java)
+            when (menuViewModel.gridSize.value) {
+                MenuInformationModel.GridSize.SMALL -> {
+                    intent.putExtra(GameActivity.GRID_ROWS, 6)
+                    intent.putExtra(GameActivity.GRID_COLS, 5)
+                }
+                MenuInformationModel.GridSize.STANDARD -> {
+                    intent.putExtra(GameActivity.GRID_ROWS, 7)
+                    intent.putExtra(GameActivity.GRID_COLS, 6)
+                }
+                MenuInformationModel.GridSize.LARGE -> {
+                    intent.putExtra(GameActivity.GRID_ROWS, 8)
+                    intent.putExtra(GameActivity.GRID_COLS, 7)
+                }
+                // Default to standard size
+                else -> {
+                    intent.putExtra(GameActivity.GRID_ROWS, 7)
+                    intent.putExtra(GameActivity.GRID_COLS, 6)
                 }
             }
+            startActivity(intent)
+        }
+        binding.smallGridRadio.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                menuViewModel.setGridSize(MenuInformationModel.GridSize.SMALL);
+            }
+        }
+        binding.standardGridRadio.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                menuViewModel.setGridSize(MenuInformationModel.GridSize.STANDARD);
+            }
+        }
+        binding.largeGridRadio.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                menuViewModel.setGridSize(MenuInformationModel.GridSize.LARGE);
+            }
+        }
+        binding.newGameBackButton.setOnClickListener { view ->
+            val fm = requireActivity().supportFragmentManager;
+            fm.beginTransaction().replace(R.id.mainMenuContainer, Menu()).commit()
+        }
+        return binding.root
     }
 }

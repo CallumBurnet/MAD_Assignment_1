@@ -9,13 +9,13 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     android:layout_marginTop="10dp"
+
     tools:context=".NewGame">
 
     <TextView
         android:id="@+id/newGameTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:text="New Game"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -23,28 +23,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/gridSizeText"
-        app:layout_constraintTop_toBottomOf="@id/newGameTitleText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/gridSizeRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Grid Size"
         android:textSize="25sp"
         android:textStyle="italic"
-        android:text="Grid Size" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newGameTitleText"
+        app:layout_goneMarginTop="0dp"
+        android:layout_marginTop="40dp"
+        />
 
     <RadioGroup
         android:id="@+id/gridSizeRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:gravity="center"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/newGameButtonsLinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridSizeText">
+        app:layout_constraintTop_toBottomOf="@+id/gridSizeText"
+        android:layout_marginBottom="140dp">
 
         <RadioButton
             android:id="@+id/smallGridRadio"
@@ -67,32 +71,76 @@
             android:text="Large (8x7)"
             android:textSize="20sp" />
     </RadioGroup>
+    <TextView
+        android:id="@+id/gameModeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Game Mode"
+        android:textSize="25sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gridSizeRadioGroup"
+        app:layout_constraintBottom_toTopOf="@id/gameModeRatioGroup"
+        android:layout_marginTop= "10dp"
+        />
+    <RadioGroup
+        android:id="@+id/gameModeRatioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameModeText">
+
+        <RadioButton
+            android:id="@+id/pvpMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player vs Player"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/aiMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player vs Computer"
+            android:textSize="20sp" />
+    </RadioGroup>
+
     <LinearLayout
         android:id="@+id/newGameButtonsLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/gridSizeRadioGroup"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
+        app:layout_constraintTop_toBottomOf="@id/gameModeRatioGroup">
+
         <Button
-            android:layout_margin="10dp"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
             android:id="@+id/newGameBackButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"
             android:text="Back"
             android:textSize="18sp"
             android:textStyle="bold" />
+
         <Button
-            android:layout_margin="10dp"
             android:id="@+id/launchGameButton"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"
             android:text="Start Game"
             android:textSize="18sp"
             android:textStyle="bold" />
+
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ class NewGame : Fragment() {
             MenuInformationModel.GridSize.SMALL -> binding.smallGridRadio.isChecked = true
             MenuInformationModel.GridSize.STANDARD -> binding.standardGridRadio.isChecked = true
             MenuInformationModel.GridSize.LARGE -> binding.largeGridRadio.isChecked = true
+
             else -> binding.standardGridRadio.isChecked = true
         }
         binding.launchGameButton.setOnClickListener { view ->

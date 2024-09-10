@@ -29,6 +29,8 @@ class NewGame : Fragment() {
         }
         binding.launchGameButton.setOnClickListener { view ->
             val intent = Intent(view.context, GameActivity::class.java)
+            intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value ?: true)
+
             when (menuViewModel.gridSize.value) {
                 MenuInformationModel.GridSize.SMALL -> {
                     intent.putExtra(GameActivity.GRID_ROWS, 6)
@@ -69,6 +71,17 @@ class NewGame : Fragment() {
             val fm = requireActivity().supportFragmentManager;
             fm.beginTransaction().replace(R.id.mainMenuContainer, Menu()).commit()
         }
+        binding.pvpMode.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                menuViewModel.setGameMode(false) // Set as multiplayer
+            }
+        }
+        binding.aiMode.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                menuViewModel.setGameMode(true) // Set as single player
+            }
+        }
+
         return binding.root
     }
 }

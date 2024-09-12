@@ -5,14 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.content.Intent
 import com.example.mad_assignment_1.databinding.FragmentMenuBinding
 
 class Menu : Fragment() {
     private lateinit var binding: FragmentMenuBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,12 +18,15 @@ class Menu : Fragment() {
     ): View {
         binding = FragmentMenuBinding.inflate(inflater, container, false);
         binding.newGameButton.setOnClickListener { view ->
-            val fm = requireActivity().supportFragmentManager
-            fm.beginTransaction().replace(R.id.mainMenuContainer, NewGame()).commit()
+            val fragment = NewGame()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainMenuContainer, fragment)
+                .commit()
         }
         binding.profileButton.setOnClickListener{view ->
-            val fm = requireActivity().supportFragmentManager
-            fm.beginTransaction().replace(R.id.mainMenuContainer, UserProfile()).commit()}
+            val intent = Intent(requireContext(), ProfileActivity::class.java)
+            startActivity(intent)
+        }
         // Inflate the layout for this fragment
         return binding.root
     }

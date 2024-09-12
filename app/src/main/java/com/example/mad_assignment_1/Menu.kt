@@ -23,6 +23,9 @@ class Menu : Fragment() {
             val fm = requireActivity().supportFragmentManager
             fm.beginTransaction().replace(R.id.mainMenuContainer, NewGame()).commit()
         }
+        binding.profileButton.setOnClickListener{view ->
+            val fm = requireActivity().supportFragmentManager
+            fm.beginTransaction().replace(R.id.mainMenuContainer, UserProfile()).commit()}
         // Inflate the layout for this fragment
         return binding.root
     }

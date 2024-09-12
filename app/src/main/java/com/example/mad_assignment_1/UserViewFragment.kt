@@ -26,5 +26,9 @@ class UserViewFragment: Fragment() {
         users.add(UserProfile("Callum", R.drawable.ic_launcher_background))
         adapter.updateUserProfiles(users)
         return binding.root
+
+    }
+    fun updateUserProfiles(newUserProfiles: List<UserProfile>) {
+        adapter.updateUserProfiles(newUserProfiles)
     }
 }

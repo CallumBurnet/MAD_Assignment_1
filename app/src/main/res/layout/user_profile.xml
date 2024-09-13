@@ -10,16 +10,4 @@ tools:context=".UserProfile">
     android:layout_height="wrap_content"
     android:text="TextView" />
 
-    <Button
-        android:id="@+id/AddNewUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/Return"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-
 </FrameLayout>

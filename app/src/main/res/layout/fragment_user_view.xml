@@ -8,27 +8,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="198dp"
-        tools:layout_editor_absoluteY="255dp">
+        >
+
+        <TextView
+            android:id="@+id/userGuideText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.20"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:text="Select User"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.70"
+            android:layout_weight="0.60"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <Button
             android:id="@+id/addUser"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.15"
+            android:layout_weight="0.10"
             android:text="Add User" />
         <Button
-            android:id="@+id/Return"
+            android:id="@+id/returnButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.15"
+            android:layout_weight="0.10"
             android:text="Return" />
 
 

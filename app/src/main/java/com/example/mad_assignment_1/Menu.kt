@@ -18,14 +18,10 @@ class Menu : Fragment() {
     ): View {
         binding = FragmentMenuBinding.inflate(inflater, container, false);
         binding.newGameButton.setOnClickListener { view ->
-            val fragment = NewGame()
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.mainMenuContainer, fragment)
-                .commit()
+            (activity as MainActivity).loadNewGameFragment()
         }
         binding.profileButton.setOnClickListener{view ->
-            val intent = Intent(requireContext(), ProfileActivity::class.java)
-            startActivity(intent)
+            (activity as MainActivity).loadUserProfileFragment()
         }
         // Inflate the layout for this fragment
         return binding.root

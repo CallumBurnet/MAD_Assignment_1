@@ -40,9 +40,14 @@ class UserViewFragment: Fragment() {
         binding.addUser.setOnClickListener{
             val newUserFragment = NewUserFragment()
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, newUserFragment)
+                .replace(R.id.mainMenuContainer, newUserFragment)
                 .addToBackStack(null)
                 .commit()
+        }
+        //return button
+        binding.returnButton.setOnClickListener{
+            val fm = requireActivity().supportFragmentManager;
+            fm.beginTransaction().replace(R.id.mainMenuContainer, Menu()).commit()
         }
 
         return binding.root

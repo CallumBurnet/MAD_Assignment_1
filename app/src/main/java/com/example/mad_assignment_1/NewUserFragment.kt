@@ -28,7 +28,7 @@ class NewUserFragment: Fragment() {
             val userName = binding.editTextText.text.toString()
             userViewModel.addUser(UserProfile(userName, R.drawable.ic_launcher_background))
            parentFragmentManager.beginTransaction()
-               .replace(R.id.fragmentContainer, UserViewFragment())
+               .replace(R.id.mainMenuContainer, UserViewFragment())
                .commit()
         }
         return binding.root

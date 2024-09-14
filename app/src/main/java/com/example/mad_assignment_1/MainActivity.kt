@@ -9,6 +9,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var menuFragment: Menu
     private lateinit var newGameFragment: NewGame
+    private lateinit var userViewFragment : UserViewFragment
+
     private val menuViewModel: MenuInformationModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         menuFragment = Menu()
         newGameFragment = NewGame()
+        userViewFragment = UserViewFragment()
+
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
@@ -25,12 +29,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadMenuFragment() {
+    fun loadMenuFragment() {
         val fm = supportFragmentManager;
         fm.beginTransaction().replace(R.id.mainMenuContainer, menuFragment).commit()
     }
+    fun loadUserProfileFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainMenuContainer, userViewFragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
-    private fun loadNewGameFragment() {
+     fun loadNewGameFragment() {
         val fm = supportFragmentManager;
         val frag = fm.findFragmentById(R.id.mainMenuContainer);
         if (frag != null) {

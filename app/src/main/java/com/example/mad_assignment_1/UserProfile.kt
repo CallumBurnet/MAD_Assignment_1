@@ -19,6 +19,7 @@ class UserProfile : Fragment() {
             UserProfileData("User ${index + 1}", R.drawable.smily_face)
         }
         val adapter = UserProfileAdapter(profiles)
+        binding.userProfileList.adapter = adapter
         binding.userProfileCreationName.hint = "User ${adapter.itemCount + 1}"
 
         binding.userAddButton.setOnClickListener { view ->
@@ -40,7 +41,6 @@ class UserProfile : Fragment() {
             binding.userProfileCreationName.hint = "User ${adapter.itemCount + 1}"
             binding.userProfileList.scrollToPosition(adapter.itemCount - 1)
         }
-        binding.userProfileList.adapter = adapter
         binding.userProfileList.layoutManager = LinearLayoutManager(context)
     }
 
@@ -49,7 +49,7 @@ class UserProfile : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false)
+        return binding.root
     }
 
 }

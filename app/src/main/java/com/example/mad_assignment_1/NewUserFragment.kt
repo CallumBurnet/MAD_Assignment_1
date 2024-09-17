@@ -7,15 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import android.content.Intent
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 
 
 import com.example.mad_assignment_1.databinding.FragmentNewUserBinding
 
+import androidx.recyclerview.widget.LinearLayoutManager
+
 
 class NewUserFragment: Fragment() {
     private lateinit var binding: FragmentNewUserBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var avatarAdapter: AvatarAdapter
+    private var selectedAvatarResId: Int = R.drawable.avatar
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,16 +29,33 @@ class NewUserFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewUserBinding.inflate(inflater, container, false)
+        binding.avatarRecyclerView.layoutManager =  LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.avatarRecyclerView.adapter = AvatarAdapter(getAvatarList()) { avatarResId ->
+            selectedAvatarResId = avatarResId // Update selected avatar
+        }
+
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
         binding.addButton.setOnClickListener{
             val userName = binding.editTextText.text.toString()
-            userViewModel.addUser(UserProfile(userName, R.drawable.ic_launcher_background))
+
+            userViewModel.addUser(UserProfile(userName, selectedAvatarResId))
            parentFragmentManager.beginTransaction()
                .replace(R.id.mainMenuContainer, UserViewFragment())
                .commit()
         }
         return binding.root
 
+
+    }
+    private fun getAvatarList(): List<Int> {
+        // Return a list of drawable resource IDs for avatars
+        return listOf(
+            R.drawable.avatar1,
+            R.drawable.avatar2,
+            R.drawable.avatar3,
+
+            // Add more avatars as needed
+        )
     }
 
 }

@@ -6,7 +6,9 @@ import android.view.ViewGroup
 
 
 class UserProfileAdapter(
-    private var userProfiles: List<UserProfile> // List of UserProfile data
+    private var userProfiles: List<UserProfile>, // List of UserProfile data
+    private val onItemClick: (UserProfile) -> Unit // List of UserProfile data
+
 ) : RecyclerView.Adapter<UserProfileAdapter.UserProfileViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserProfileViewHolder {
@@ -16,6 +18,7 @@ class UserProfileAdapter(
 
     override fun onBindViewHolder(holder: UserProfileViewHolder, position: Int) {
         holder.bind(userProfiles[position])
+
     }
 
     override fun getItemCount(): Int = userProfiles.size
@@ -25,13 +28,22 @@ class UserProfileAdapter(
         notifyDataSetChanged()
     }
 
-    class UserProfileViewHolder(private val binding: UserProfileBinding) :
+
+    inner class UserProfileViewHolder(private val binding: UserProfileBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            // Set click listener on item view
+            binding.root.setOnClickListener {
+                // Call the click listener with the current userProfile
+                val userProfile = userProfiles[adapterPosition]
+                onItemClick(userProfile)
+            }
+        }
+
         fun bind(userProfile: UserProfile) {
             binding.userName.text = userProfile.userName
-
-            // Set image resource if applicable
-            // binding.userImageView.setImageResource(userProfile.imageResId)
+            binding.avatarView.setImageResource(userProfile.imageResId)
         }
     }
 }

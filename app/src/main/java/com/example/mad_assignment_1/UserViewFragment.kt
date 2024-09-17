@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +25,12 @@ class UserViewFragment: Fragment() {
     ): View? {
         binding = FragmentUserViewBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-
         userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
 
-        adapter = UserProfileAdapter(userViewModel.getUsers().value?: mutableListOf())
+        adapter = UserProfileAdapter(userViewModel.getUsers().value ?: emptyList()) { userProfile ->
+            // Handle item click
+            onUserProfileClick(userProfile)
+        }
         binding.recyclerView.adapter = adapter
 
 
@@ -51,7 +53,10 @@ class UserViewFragment: Fragment() {
         }
 
         return binding.root
-
     }
+    fun onUserProfileClick(userProfile: UserProfile){
+        Toast.makeText(requireContext(), "UURR", Toast.LENGTH_SHORT).show()
+    }
+
 
 }

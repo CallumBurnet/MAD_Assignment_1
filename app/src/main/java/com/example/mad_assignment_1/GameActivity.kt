@@ -1,11 +1,15 @@
 package com.example.mad_assignment_1
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.activity.viewModels
 import com.example.mad_assignment_1.databinding.GameBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -17,63 +21,86 @@ class GameActivity : AppCompatActivity() {
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>();
-    private var numRows = 7; //hard coded for testing
-    private var numCols = 6; //hard coded for testing
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
             Log.d("GameActivity", "Found Grid rows and cols")
-            numRows = intent.getIntExtra(GameActivity.GRID_ROWS,  7)
-            numCols = intent.getIntExtra(GameActivity.GRID_COLS, 6)
-            gameViewModel.isSinglePlayer.value = intent.getBooleanExtra(GameActivity.IS_SINGLE_PLAYER, false)
-
+            gameViewModel.init(
+                intent.getIntExtra(GameActivity.GRID_ROWS, 7),
+                intent.getIntExtra(GameActivity.GRID_COLS, 6),
+                intent.getBooleanExtra(GameActivity.IS_SINGLE_PLAYER, false)
+            )
         }
 
         super.onCreate(savedInstanceState)
         binding = GameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        cells.addAll(List(numRows * numCols) {index ->
+        adapter = CellAdapter(gameViewModel)
+        binding.gameState.text = "Player 1 turn"
 
-            val row  = index/numCols //logic for row of cell
-            val col = index%numCols //logic for col of cell
-            Cell(row, col,0) //default setup, 0 for unused
-        })
-        adapter = CellAdapter(cells){cell ->
-            if(cell.player == 1 ||  cell.player == 2){
-                return@CellAdapter //returns
+        binding.undoButton.setOnClickListener { view  ->
+            if (!gameViewModel.undo()) {
+                Snackbar.make(view, "No moves to undo", Snackbar.LENGTH_SHORT).show()
             }
-            print(gameViewModel.isSinglePlayer.value == false)
-            if(gameViewModel.isSinglePlayer.value == false){ //checks if gamemode is single player
-                if(gameViewModel.currentTurn.value == 2){
-                    // current turn value 0 is AI or player 2
-                    cell.player = 2
-                }else{
-                    cell.player = 1 // player 1's turn played
-                }
-
-            }else{ //Only 1 player vs AI
-                println("MADE IT")
-                if(gameViewModel.currentTurn.value == 2){
-                    return@CellAdapter //return if its not your turn to click ~ shouldnt happen
-                }else{
-                    cell.player = 1; //Player 1's turn played
+        }
+        binding.resetButton.setOnClickListener { _ ->
+            gameViewModel.reset()
+        }
+        binding.exitControlsButton.setOnClickListener { _ ->
+            showControls()
+        }
+        binding.cancelExitButton.setOnClickListener { _ ->
+            hideControls()
+        }
+        binding.pauseButton.setOnClickListener { _ ->
+            // TODO
+        }
+        binding.exitButton.setOnClickListener { _ ->
+            setResult(RESULT_OK)
+            finish()
+        }
+        gameViewModel.playerTurn.observe(this) { turn ->
+            if (gameViewModel.win.value != true) {
+                binding.gameState.text = "Player ${turn} turn"
+            }
+        }
+        gameViewModel.win.observe(this)  { win ->
+            if (win) {
+                if (gameViewModel.isSinglePlayer.value == true && gameViewModel.playerTurn.value == 2) {
+                    binding.gameState.text = "Computer has won!!"
+                } else {
+                    binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
                 }
             }
-
-            gameViewModel.updateBoard(cells, numRows, numCols) //updates the turn value
-
+        }
+        if (gameViewModel.isSinglePlayer.value == true) {
+            gameViewModel.playerTurn.observe(this) { turn ->
+                if (turn == 2) {
+                    do {
+                        val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
+                    } while (gameViewModel.dropDisc(0, dropPoint))
+                }
+            }
         }
 
-        binding.recyclerView.layoutManager = GridLayoutManager(this,numCols ) //sets up the grid
+        binding.recyclerView.layoutManager = GridLayoutManager(this, gameViewModel.numCols) //sets up the grid
         binding.recyclerView.adapter = adapter
-
-        gameViewModel.cells.observe(this){cells ->
-            adapter.updateCells(cells) //updates the cell
-        }
-
     }
 
+    fun showControls() {
+        binding.cancelExitButton.visibility = View.VISIBLE
+        binding.pauseButton.visibility = View.VISIBLE
+        binding.exitButton.visibility = View.VISIBLE
+        binding.exitControlsButton.visibility = View.GONE
+    }
+
+    fun hideControls() {
+        binding.cancelExitButton.visibility = View.GONE
+        binding.pauseButton.visibility = View.GONE
+        binding.exitButton.visibility = View.GONE
+        binding.exitControlsButton.visibility = View.VISIBLE
+    }
 }

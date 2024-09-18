@@ -23,7 +23,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     private var gameID: Long = 0;
     private var userID: Long = 0;
     private var opponentID: Long = 0;
-    private val moves = mutableListOf<Int>()
+    private var moves = mutableListOf<Int>()
     private val _cellsData = MutableLiveData<List<Cell>>()
     private val _currentTurn = MutableLiveData<Int>()
     private val _win = MutableLiveData<Boolean>()
@@ -48,10 +48,15 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
      * Save the current game state to the database
      */
     fun saveToDatabase() {
-        for (cell in _cellsData.value!!) {
-            if (cell.player != 0) {
-                connectFourDao.insertCells(CellEntity(gameID, cell.row, cell.col, cell.player))
-            }
+        for (cell in moves.iterator().withIndex()) {
+            connectFourDao.insertCells(
+                CellEntity(
+                    gameID,
+                    cell.value,
+                    cells.value?.get(cell.value)?.player ?: 0,
+                    cell.index
+                )
+            )
         }
         connectFourDao.updateGame(GameEntity(gameID, userID, opponentID, playerTurn.value!!, numRows, numCols))
     }
@@ -136,10 +141,15 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         reset()
         _currentTurn.value = game.playerTurn
         // Restore any cells found
-        for (restoredCell in connectFourDao.getGameCells(gameID)) {
+        val restoredCells = connectFourDao.getGameCells(gameID)
+        moves = MutableList(restoredCells.size) { _ ->
+            0
+        }
+        for (restoredCell in restoredCells) {
             _cellsData.value
-            ?.get(numCols * restoredCell.row + restoredCell.col)
+            ?.get(restoredCell.location)
             ?.player = restoredCell.player;
+            moves[restoredCell.moveNo] = restoredCell.location
         }
     }
 

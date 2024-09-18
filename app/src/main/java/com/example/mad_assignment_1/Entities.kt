@@ -44,31 +44,10 @@ data class GameEntity(
     val cols: Int,
 )
 
-@Entity(tableName = "cells_table", primaryKeys = ["gameID", "row", "col"])
+@Entity(tableName = "cells_table", primaryKeys = ["gameID", "location"])
 data class CellEntity(
     val gameID: Long,
-    val row: Int,
-    val col: Int,
+    val location: Int,
     val player: Int,
+    val moveNo: Int,
 )
-
-//data class GamesWithUser(
-//    @Embedded
-//    val user: UserEntity,
-//    @Relation(
-//        parentColumn = "userID",
-//        entityColumn = "gameUserID"
-//    )
-//    val games: List<GameEntity>
-//)
-//
-//data class GamesWithUserAndOpponents(
-//    @Embedded
-//    val opponent: UserEntity,
-//    @Relation(
-//        entity = UserEntity::class,
-//        parentColumn = "userID",
-//        entityColumn = "opponentID"
-//    )
-//    val games: List<GamesWithUser>
-//)

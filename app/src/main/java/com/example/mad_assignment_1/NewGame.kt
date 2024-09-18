@@ -113,4 +113,9 @@ class NewGame : Fragment() {
         }
         return binding.root
     }
+
+    override fun onResume() {
+        super.onResume()
+        menuViewModel.forceUpdate()
+    }
 }

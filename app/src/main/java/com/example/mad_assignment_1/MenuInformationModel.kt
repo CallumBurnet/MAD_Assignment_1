@@ -18,6 +18,10 @@ class MenuInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         _gridSize.value = gridSize
     }
 
+    fun forceUpdate() {
+        _isSinglePlayer.value = _isSinglePlayer.value
+    }
+
     fun checkForGames(userID: Int, opponentID: Int): List<GameEntity> {
         return connectFourDao.getGamesWithUsers(userID, opponentID)
     }

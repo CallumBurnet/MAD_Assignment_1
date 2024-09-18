@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
 
 /**
  * Holds the state for the game
@@ -16,7 +19,10 @@ import androidx.lifecycle.ViewModel
  * @property numCols Number of columns
  * @property numRows Number of rows
  */
-class GameInformationModel() : ViewModel() {
+class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewModel() {
+    private var gameID: Long = 0;
+    private var userID: Long = 0;
+    private var opponentID: Long = 0;
     private val moves = mutableListOf<Int>()
     private val _cellsData = MutableLiveData<List<Cell>>()
     private val _currentTurn = MutableLiveData<Int>()
@@ -36,6 +42,26 @@ class GameInformationModel() : ViewModel() {
     fun updateBoard() {
         _win.value = checkForWin()
         togglePlayer()
+    }
+
+    /**
+     * Save the current game state to the database
+     */
+    fun saveToDatabase() {
+        for (cell in _cellsData.value!!) {
+            if (cell.player != 0) {
+                connectFourDao.insertCells(CellEntity(gameID, cell.row, cell.col, cell.player))
+            }
+        }
+        connectFourDao.updateGame(GameEntity(gameID, userID, opponentID, playerTurn.value!!, numRows, numCols))
+    }
+
+    /**
+     * Remove the game from the databse
+     */
+    fun dropGame() {
+        connectFourDao.deleteGame(gameID)
+        connectFourDao.deleteGameCells(gameID)
     }
 
     /** Makes sure the disc drops to the lowest level
@@ -99,11 +125,22 @@ class GameInformationModel() : ViewModel() {
     /**
      * Initialise the view model
      */
-    fun init(rows: Int, cols: Int, isSinglePlayer: Boolean,) {
-        numRows = rows
-        numCols = cols
+    fun init(gameID: Long, isSinglePlayer: Boolean,) {
+        val game = connectFourDao.getGame(gameID)
+        this.gameID = gameID
+        numRows = game.rows
+        numCols = game.cols
+        userID = game.gameUserID
+        opponentID = game.opponentID
         _isSinglePlayer.value = isSinglePlayer
         reset()
+        _currentTurn.value = game.playerTurn
+        // Restore any cells found
+        for (restoredCell in connectFourDao.getGameCells(gameID)) {
+            _cellsData.value
+            ?.get(numCols * restoredCell.row + restoredCell.col)
+            ?.player = restoredCell.player;
+        }
     }
 
     private fun togglePlayer(){
@@ -167,6 +204,18 @@ class GameInformationModel() : ViewModel() {
         return false
     }
 
+    // Needed to add database to view model
+    companion object {
+        val Factory: ViewModelProvider.Factory = object :  ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                val application = checkNotNull(extras[APPLICATION_KEY])
+                if (modelClass.isAssignableFrom(GameInformationModel::class.java)) {
+                    return GameInformationModel((application as ConnectFourApplication).dao) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+    }
 }
 
 

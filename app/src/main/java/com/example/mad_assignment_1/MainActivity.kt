@@ -9,7 +9,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var menuFragment: Menu
     private lateinit var newGameFragment: NewGame
-    private val menuViewModel: MenuInformationModel by viewModels()
+    private val menuViewModel: MenuInformationModel by viewModels {
+        MenuInformationModel.Factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

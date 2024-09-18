@@ -13,11 +13,12 @@ import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
     companion object {
-        const val GRID_ROWS = "com.game_activity.grid_rows"
-        const val GRID_COLS = "com.game_activity.grid_cols"
+        const val GAME_ID = "com.game_activity.gameID"
         const val IS_SINGLE_PLAYER = "com.game_activity.is_single_player"
     }
-    private val gameViewModel: GameInformationModel by viewModels()
+    private val gameViewModel: GameInformationModel by viewModels {
+        GameInformationModel.Factory
+    }
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>();
@@ -28,8 +29,7 @@ class GameActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             Log.d("GameActivity", "Found Grid rows and cols")
             gameViewModel.init(
-                intent.getIntExtra(GameActivity.GRID_ROWS, 7),
-                intent.getIntExtra(GameActivity.GRID_COLS, 6),
+                intent.getLongExtra(GAME_ID, 0),
                 intent.getBooleanExtra(GameActivity.IS_SINGLE_PLAYER, false)
             )
         }
@@ -39,8 +39,6 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = CellAdapter(gameViewModel)
-        binding.gameState.text = "Player 1 turn"
-
         binding.undoButton.setOnClickListener { view  ->
             if (!gameViewModel.undo()) {
                 Snackbar.make(view, "No moves to undo", Snackbar.LENGTH_SHORT).show()
@@ -56,9 +54,15 @@ class GameActivity : AppCompatActivity() {
             hideControls()
         }
         binding.pauseButton.setOnClickListener { _ ->
-            // TODO
+            hideControls()
+            gameViewModel.saveToDatabase()
+            setResult(RESULT_OK)
+            finish()
         }
         binding.exitButton.setOnClickListener { _ ->
+            hideControls()
+            // Remove the game from the database as we don't want it saved
+            gameViewModel.dropGame()
             setResult(RESULT_OK)
             finish()
         }
@@ -90,14 +94,14 @@ class GameActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
     }
 
-    fun showControls() {
+    private fun showControls() {
         binding.cancelExitButton.visibility = View.VISIBLE
         binding.pauseButton.visibility = View.VISIBLE
         binding.exitButton.visibility = View.VISIBLE
         binding.exitControlsButton.visibility = View.GONE
     }
 
-    fun hideControls() {
+    private fun hideControls() {
         binding.cancelExitButton.visibility = View.GONE
         binding.pauseButton.visibility = View.GONE
         binding.exitButton.visibility = View.GONE

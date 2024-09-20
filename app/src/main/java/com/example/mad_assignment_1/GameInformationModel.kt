@@ -83,6 +83,9 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
             connectFourDao.deleteGameCells(gameID)
         }
     }
+
+
+
     fun getMovesPlayed():Int{
         val boardCells = _cellsData.value ?: return 0
         val occupiedCells = boardCells.count { it.player != 0 }

@@ -33,7 +33,6 @@ class GameActivity : AppCompatActivity() {
     private var numCols = 6; //hard coded for testing
     private lateinit var primaryUser : UserEntity
     private lateinit var secondaryUser : UserEntity
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
@@ -136,17 +135,24 @@ class GameActivity : AppCompatActivity() {
         }
 
         if (gameViewModel.isSinglePlayer.value == true) {
+            var isProcessingRequest = false // Flag to track request processing
+             // Flag to track if the game is paused
+
             gameViewModel.playerTurn.observe(this) { turn ->
-                if (turn == 2) {
+                if (turn == 2 && !isProcessingRequest && gameViewModel.win.value == false) { // Check if it's player 2's turn and no request is being processed or paused
+                    isProcessingRequest = true // Set the flag to indicate a request is in progress
+
                     // Use a Handler to introduce a delay
                     val handler = Handler(Looper.getMainLooper())
                     handler.postDelayed({
                         do {
                             val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
                         } while (gameViewModel.dropDisc(0, dropPoint))
-                        gameViewModel.updateBoard()
-                        // Delay for 2000 milliseconds (2 seconds)
 
+                        gameViewModel.updateBoard()
+
+                        // Reset the flag after processing the request
+                        isProcessingRequest = false // Indicate that processing is complete
                     }, 1000)
                 }
             }

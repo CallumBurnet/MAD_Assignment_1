@@ -6,21 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.content.Intent
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.mad_assignment_1.databinding.FragmentMenuBinding
 
 class Menu : Fragment() {
     private lateinit var binding: FragmentMenuBinding
-    private lateinit var menuInformationModel: MenuInformationModel
-
-
+    private val menuInformationModel: MenuInformationModel by activityViewModels { MenuInformationModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMenuBinding.inflate(inflater, container, false);
-        menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
+
         val primaryUser = menuInformationModel.getPrimaryUser()
         val secondaryUser = menuInformationModel.getSecondaryUser()
         if(primaryUser != null){

@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 class UserViewFragment: Fragment() {
     private lateinit var binding: FragmentUserViewBinding
     private lateinit var adapter: UserProfileAdapter
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var menuInformationModel: MenuInformationModel
 
 
     override fun onCreateView(
@@ -23,18 +23,28 @@ class UserViewFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        var isFirstPlayer:  Boolean = true;
+
         binding = FragmentUserViewBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+        menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
 
-        adapter = UserProfileAdapter(userViewModel.getUsers().value ?: emptyList()) { userProfile ->
+        adapter = UserProfileAdapter(menuInformationModel.getUsers().value ?: emptyList()) { userProfile ->
             // Handle item click
+            Toast.makeText(context, "User ${userProfile.userName} clicked", Toast.LENGTH_SHORT).show()
+
             onUserProfileClick(userProfile)
+            if(isFirstPlayer){
+                menuInformationModel.setPrimaryUser(userProfile)
+                binding.addSecondUser.visibility = View.VISIBLE;
+            }else{
+                menuInformationModel.setSecondaryUser(userProfile)
+            }
         }
         binding.recyclerView.adapter = adapter
 
 
-        userViewModel.getUsers().observe(viewLifecycleOwner, { users ->
+        menuInformationModel.getUsers().observe(viewLifecycleOwner, { users ->
             adapter.updateUserProfiles(users)
         })
 
@@ -45,6 +55,9 @@ class UserViewFragment: Fragment() {
                 .replace(R.id.mainMenuContainer, newUserFragment)
                 .addToBackStack(null)
                 .commit()
+        }
+        binding.addSecondUser.setOnClickListener{
+            isFirstPlayer = false;
         }
         //return button
         binding.returnButton.setOnClickListener{

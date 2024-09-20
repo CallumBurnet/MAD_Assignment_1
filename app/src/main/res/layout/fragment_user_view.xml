@@ -14,7 +14,7 @@
             android:id="@+id/userGuideText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.20"
+            android:layout_weight="0.10"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:text="Select User"
@@ -29,7 +29,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <Button
+            android:id="@+id/addSecondUser"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:text="Select Second User"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/addUser"
             android:layout_width="match_parent"
@@ -41,7 +47,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.10"
-            android:text="Return" />
+            android:text="Return"
+            />
+
+
 
 
     </LinearLayout>

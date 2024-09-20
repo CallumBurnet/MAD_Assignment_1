@@ -10,6 +10,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var menuFragment: Menu
     private lateinit var newGameFragment: NewGame
     private lateinit var userViewFragment : UserViewFragment
+    private lateinit var menuInformationModel: MenuInformationModel
+
 
     private val menuViewModel: MenuInformationModel by viewModels()
 
@@ -25,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             loadMenuFragment()
         }
-
 
     }
 

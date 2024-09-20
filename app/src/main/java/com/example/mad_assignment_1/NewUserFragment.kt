@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 class NewUserFragment: Fragment() {
     private lateinit var binding: FragmentNewUserBinding
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var menuInformationModel: MenuInformationModel
     private lateinit var avatarAdapter: AvatarAdapter
     private var selectedAvatarResId: Int = R.drawable.avatar
 
@@ -28,17 +28,18 @@ class NewUserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentNewUserBinding.inflate(inflater, container, false)
         binding.avatarRecyclerView.layoutManager =  LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.avatarRecyclerView.adapter = AvatarAdapter(getAvatarList()) { avatarResId ->
             selectedAvatarResId = avatarResId // Update selected avatar
         }
 
-        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+        menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
         binding.addButton.setOnClickListener{
             val userName = binding.editTextText.text.toString()
 
-            userViewModel.addUser(UserProfile(userName, selectedAvatarResId))
+            menuInformationModel.addUser(UserProfile(userName, selectedAvatarResId))
            parentFragmentManager.beginTransaction()
                .replace(R.id.mainMenuContainer, UserViewFragment())
                .commit()

@@ -25,7 +25,7 @@ class AvatarAdapter(
         holder.avatarImageView.setImageResource(avatarResId)
 
         holder.itemView.setOnClickListener{
-            onClick(avatarResId)
+            onClick(position)
         }
     }
     override fun getItemCount(): Int = avatars.size

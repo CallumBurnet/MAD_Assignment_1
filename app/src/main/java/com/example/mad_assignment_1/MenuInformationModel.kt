@@ -18,11 +18,14 @@ class MenuInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     private val _isSinglePlayer = MutableLiveData<Boolean>()
     val isSinglePlayer: LiveData<Boolean> get() = _isSinglePlayer
     private val _users: LiveData<List<UserEntity>> = connectFourDao.getUsers() // LiveData<List<UserEntity>>
-    private val imageResourceMap = mapOf(
-        1 to R.drawable.avatar1,
-        2 to R.drawable.avatar,
-        3 to R.drawable.avatar2,
-        4 to R.drawable.avatar3
+    val imageResourceMap = listOf(
+        R.drawable.avatar1,
+        R.drawable.avatar,
+        R.drawable.avatar2,
+        R.drawable.avatar3,
+        R.drawable.smily_face,
+        R.drawable.angry_face,
+        R.drawable.android_face,
     )
 
     fun setGridSize(gridSize: GridSize) {
@@ -40,7 +43,7 @@ class MenuInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     fun newGame(rows: Int, cols: Int, userID: Long, opponentID: Long): Long {
         return connectFourDao.insertGame(GameEntity(0, userID, opponentID, 1, rows, cols))
     }
-    fun getImageResource(profilePicId: Int): Int? {
+    fun getImageResource(profilePicId: Int): Int {
         return imageResourceMap[profilePicId]
     }
     fun setGameMode(isSinglePlayer: Boolean){

@@ -27,14 +27,13 @@ class NewUserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
         binding = FragmentNewUserBinding.inflate(inflater, container, false)
         binding.avatarRecyclerView.layoutManager =  LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.avatarRecyclerView.adapter = AvatarAdapter(getAvatarList()) { avatarResId ->
+        binding.avatarRecyclerView.adapter = AvatarAdapter(menuInformationModel.imageResourceMap) { avatarResId ->
             selectedAvatarResId = avatarResId // Update selected avatar
+            binding.avatarPreview.setImageResource(menuInformationModel.getImageResource(selectedAvatarResId))
         }
-
-        menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
         binding.addButton.setOnClickListener{
             val userName = binding.editTextText.text.toString()
 
@@ -58,15 +57,4 @@ class NewUserFragment: Fragment() {
 
 
     }
-    private fun getAvatarList(): List<Int> {
-        // Return a list of drawable resource IDs for avatars
-        return listOf(
-            R.drawable.avatar1,
-            R.drawable.avatar2,
-            R.drawable.avatar3,
-
-            // Add more avatars as needed
-        )
-    }
-
 }

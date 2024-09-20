@@ -30,7 +30,6 @@ class UserViewFragment : Fragment() {
 
         // Initialize the adapter
         adapter = UserProfileAdapter(emptyList(), { userEntity ->
-            Toast.makeText(context, "User ${userEntity.name} clicked", Toast.LENGTH_SHORT).show()
             onUserProfileClick(userEntity)
 
             if (isFirstPlayer) {
@@ -38,6 +37,7 @@ class UserViewFragment : Fragment() {
                 binding.addSecondUser.visibility = View.VISIBLE
             } else {
                 menuInformationModel.setSecondaryUser(userEntity)
+                isFirstPlayer = true
             }
         }, menuInformationModel) // Pass the ViewModel here
         binding.recyclerView.adapter = adapter

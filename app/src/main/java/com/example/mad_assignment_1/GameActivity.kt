@@ -163,6 +163,8 @@ class GameActivity : AppCompatActivity() {
         binding.pauseButton.visibility = View.VISIBLE
         binding.exitButton.visibility = View.VISIBLE
         binding.exitControlsButton.visibility = View.GONE
+        binding.undoButton.visibility = View.GONE
+        binding.resetButton.visibility = View.GONE
     }
 
     private fun hideControls() {
@@ -170,6 +172,8 @@ class GameActivity : AppCompatActivity() {
         binding.pauseButton.visibility = View.GONE
         binding.exitButton.visibility = View.GONE
         binding.exitControlsButton.visibility = View.VISIBLE
+        binding.undoButton.visibility = View.VISIBLE
+        binding.undoButton.visibility = View.VISIBLE
     }
     private fun hideGameControls(){
         binding.resetButton.visibility = View.GONE

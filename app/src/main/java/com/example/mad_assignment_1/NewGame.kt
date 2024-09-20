@@ -52,7 +52,6 @@ class NewGame : Fragment() {
             var secondaryUserId = arguments?.getLong("secondaryUserID") ?: 1L
             if((menuViewModel.isSinglePlayer.value == false && secondaryUserId.toInt() == 0)
                 || (menuViewModel.isSinglePlayer.value == true && primaryUserId.toInt()==0)){
-                System.out.println("UURR")
                 val userViewFragment = UserViewFragment().apply{
                     arguments = Bundle().apply {
                         putBoolean("INSUFFICIENT_PLAYERS", true) // Pass the flag

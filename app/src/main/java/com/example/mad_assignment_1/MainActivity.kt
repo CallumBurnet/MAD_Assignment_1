@@ -11,9 +11,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var newGameFragment: NewGame
     private lateinit var userViewFragment : UserViewFragment
     private lateinit var menuInformationModel: MenuInformationModel
-
-
-    private val menuViewModel: MenuInformationModel by viewModels()
+    private val menuViewModel: MenuInformationModel by viewModels {
+        MenuInformationModel.Factory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -139,7 +139,16 @@
             android:text="Start Game"
             android:textSize="18sp"
             android:textStyle="bold" />
-
+        <Button
+            android:id="@+id/resumeButton"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"
+            android:text="Resume Game"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 

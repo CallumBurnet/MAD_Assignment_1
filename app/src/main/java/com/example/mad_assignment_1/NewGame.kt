@@ -6,20 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.mad_assignment_1.databinding.FragmentNewGameBinding
 
 
 class NewGame : Fragment() {
     private lateinit var binding: FragmentNewGameBinding
-    private lateinit var menuViewModel: MenuInformationModel
+    private val menuViewModel: MenuInformationModel by viewModels<MenuInformationModel> {
+        MenuInformationModel.Factory
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNewGameBinding.inflate(inflater, container, false)
-        menuViewModel = ViewModelProvider(requireActivity())[MenuInformationModel::class.java]
         when (menuViewModel.gridSize.value) {
             MenuInformationModel.GridSize.SMALL -> binding.smallGridRadio.isChecked = true
             MenuInformationModel.GridSize.STANDARD -> binding.standardGridRadio.isChecked = true
@@ -27,29 +29,46 @@ class NewGame : Fragment() {
 
             else -> binding.standardGridRadio.isChecked = true
         }
+        menuViewModel.isSinglePlayer.observe(viewLifecycleOwner) { isSinglePlayer ->
+            if (menuViewModel.checkForGames(1, 2).isNotEmpty() && isSinglePlayer == false
+                || menuViewModel.checkForGames(1, 3).isNotEmpty() && isSinglePlayer) {
+                binding.resumeButton.visibility = View.VISIBLE
+            } else {
+                binding.resumeButton.visibility = View.GONE
+            }
+        }
         binding.launchGameButton.setOnClickListener { view ->
             val intent = Intent(view.context, GameActivity::class.java)
-            intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value ?: true)
+            val rows: Int
+            val cols: Int
+            val user = 1.toLong()
+            var opponent = 2.toLong()
+            // 3 is the default UserID for the computer
+            if (menuViewModel.isSinglePlayer.value == true) {
+                opponent = 3;
+            }
 
             when (menuViewModel.gridSize.value) {
                 MenuInformationModel.GridSize.SMALL -> {
-                    intent.putExtra(GameActivity.GRID_ROWS, 6)
-                    intent.putExtra(GameActivity.GRID_COLS, 5)
+                    rows = 6
+                    cols = 5
                 }
                 MenuInformationModel.GridSize.STANDARD -> {
-                    intent.putExtra(GameActivity.GRID_ROWS, 7)
-                    intent.putExtra(GameActivity.GRID_COLS, 6)
+                    rows = 7
+                    cols = 6
                 }
                 MenuInformationModel.GridSize.LARGE -> {
-                    intent.putExtra(GameActivity.GRID_ROWS, 8)
-                    intent.putExtra(GameActivity.GRID_COLS, 7)
+                    rows = 8
+                    cols = 7
                 }
-                // Default to standard size
                 else -> {
-                    intent.putExtra(GameActivity.GRID_ROWS, 7)
-                    intent.putExtra(GameActivity.GRID_COLS, 6)
+                    rows = 7
+                    cols = 6
                 }
             }
+            val gameID = menuViewModel.newGame(rows, cols, user, opponent)
+            intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value ?: true)
+            intent.putExtra(GameActivity.GAME_ID, gameID)
             startActivity(intent)
         }
         binding.smallGridRadio.setOnCheckedChangeListener { _, isChecked ->
@@ -67,7 +86,7 @@ class NewGame : Fragment() {
                 menuViewModel.setGridSize(MenuInformationModel.GridSize.LARGE);
             }
         }
-        binding.newGameBackButton.setOnClickListener { view ->
+        binding.newGameBackButton.setOnClickListener { _ ->
             val fm = requireActivity().supportFragmentManager;
             fm.beginTransaction().replace(R.id.mainMenuContainer, Menu()).commit()
         }
@@ -81,7 +100,22 @@ class NewGame : Fragment() {
                 menuViewModel.setGameMode(true) // Set as single player
             }
         }
-
+        binding.resumeButton.setOnClickListener { view ->
+            val gameID = if (menuViewModel.isSinglePlayer.value == true) {
+                menuViewModel.checkForGames(1, 3).first().gameID
+            } else {
+                menuViewModel.checkForGames(1, 2).first().gameID
+            }
+            val intent = Intent(view.context, GameActivity::class.java)
+            intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value)
+            intent.putExtra(GameActivity.GAME_ID, gameID)
+            startActivity(intent)
+        }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        menuViewModel.forceUpdate()
     }
 }

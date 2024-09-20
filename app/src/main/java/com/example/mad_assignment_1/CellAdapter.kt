@@ -52,7 +52,11 @@ class CellAdapter(private val gameViewModel: GameInformationModel)
             }
             binding.root.setOnClickListener { view ->
                 // Only allow moves in non-win state
-                if (gameViewModel.win.value == false) {
+                if(gameViewModel.isSinglePlayer.value == true && gameViewModel.playerTurn.value == 2){
+                    return@setOnClickListener
+
+                }
+                else if (gameViewModel.win.value == false) {
                     if (!gameViewModel.dropDisc(cell.row, cell.col)) {
                         gameViewModel.updateBoard()
                     } else {

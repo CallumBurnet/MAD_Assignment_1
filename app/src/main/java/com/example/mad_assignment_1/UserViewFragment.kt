@@ -21,7 +21,7 @@ class UserViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var isFirstPlayer = true
-
+        val isInsufficientPlayers = arguments?.getBoolean("INSUFFICIENT_PLAYERS", false) ?: false
         binding = FragmentUserViewBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -41,7 +41,9 @@ class UserViewFragment : Fragment() {
             }
         }, menuInformationModel) // Pass the ViewModel here
         binding.recyclerView.adapter = adapter
-
+        if(isInsufficientPlayers){
+            Toast.makeText(requireContext(), "Not enough players selected", Toast.LENGTH_LONG).show()
+        }
         // Allocate image resources
 
         // Observe user list

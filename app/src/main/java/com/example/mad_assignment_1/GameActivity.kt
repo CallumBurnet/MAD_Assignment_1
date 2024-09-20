@@ -54,6 +54,8 @@ class GameActivity : AppCompatActivity() {
         val primaryUserID = gameViewModel.getPrimaryUserId()
         primaryUser = gameViewModel.getPlayerById(primaryUserID) ?: UserEntity(0, "Player 1", R.drawable.avatar, 0, 0)
         val secondaryUserID = gameViewModel.getSecondaryUserId()
+        System.out.println("Second user" +secondaryUserID )
+
         secondaryUser = gameViewModel.getPlayerById(secondaryUserID) ?: UserEntity(0, "Player 2", R.drawable.avatar, 0, 0)
         adapter = CellAdapter(gameViewModel)
         binding.undoButton.setOnClickListener { view  ->
@@ -137,8 +139,10 @@ class GameActivity : AppCompatActivity() {
                         do {
                             val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
                         } while (gameViewModel.dropDisc(0, dropPoint))
-                        gameViewModel.togglePlayer()
-                    }, 1500) // Delay for 2000 milliseconds (2 seconds)
+                        gameViewModel.updateBoard()
+                        // Delay for 2000 milliseconds (2 seconds)
+
+                    }, 1000)
                 }
             }
         }

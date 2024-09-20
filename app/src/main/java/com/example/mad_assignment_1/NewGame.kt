@@ -50,33 +50,56 @@ class NewGame : Fragment() {
             val cols: Int
             val primaryUserId = arguments?.getLong("primaryUserID") ?: 0L
             var secondaryUserId = arguments?.getLong("secondaryUserID") ?: 1L
-            // 3 is the default UserID for the computer
-            if (menuViewModel.isSinglePlayer.value == true) {
-                secondaryUserId = 3;
-            }
+            if((menuViewModel.isSinglePlayer.value == false && secondaryUserId.toInt() == 0)
+                || (menuViewModel.isSinglePlayer.value == true && primaryUserId.toInt()==0)){
+                System.out.println("UURR")
+                val userViewFragment = UserViewFragment().apply{
+                    arguments = Bundle().apply {
+                        putBoolean("INSUFFICIENT_PLAYERS", true) // Pass the flag
+                    }
+                } // Create instance of UserViewFragment
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.mainMenuContainer, userViewFragment)
+                    .addToBackStack(null) // Optional: add to back stack
+                    .commit()
 
-            when (menuViewModel.gridSize.value) {
-                MenuInformationModel.GridSize.SMALL -> {
-                    rows = 6
-                    cols = 5
+            }else {
+
+
+                // 3 is the default UserID for the computer
+                if (menuViewModel.isSinglePlayer.value == true) {
+                    secondaryUserId = 3;
                 }
-                MenuInformationModel.GridSize.STANDARD -> {
-                    rows = 7
-                    cols = 6
+
+                when (menuViewModel.gridSize.value) {
+                    MenuInformationModel.GridSize.SMALL -> {
+                        rows = 6
+                        cols = 5
+                    }
+
+                    MenuInformationModel.GridSize.STANDARD -> {
+                        rows = 7
+                        cols = 6
+                    }
+
+                    MenuInformationModel.GridSize.LARGE -> {
+                        rows = 8
+                        cols = 7
+                    }
+
+                    else -> {
+                        rows = 7
+                        cols = 6
+                    }
                 }
-                MenuInformationModel.GridSize.LARGE -> {
-                    rows = 8
-                    cols = 7
-                }
-                else -> {
-                    rows = 7
-                    cols = 6
-                }
+                val gameID = menuViewModel.newGame(rows, cols, primaryUserId, secondaryUserId)
+                intent.putExtra(
+                    GameActivity.IS_SINGLE_PLAYER,
+                    menuViewModel.isSinglePlayer.value ?: true
+                )
+                intent.putExtra(GameActivity.GAME_ID, gameID)
+                startActivity(intent)
             }
-            val gameID = menuViewModel.newGame(rows, cols, primaryUserId, secondaryUserId)
-            intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value ?: true)
-            intent.putExtra(GameActivity.GAME_ID, gameID)
-            startActivity(intent)
         }
         binding.smallGridRadio.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

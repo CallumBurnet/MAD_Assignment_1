@@ -1,6 +1,7 @@
 package com.example.mad_assignment_1
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,8 @@ class GameActivity : AppCompatActivity() {
     companion object {
         const val GAME_ID = "com.game_activity.gameID"
         const val IS_SINGLE_PLAYER = "com.game_activity.is_single_player"
+        const val PLAYER_ONE_COLOUR = "com.game_activity.player_one_colour"
+        const val PLAYER_TWO_COLOUR = "com.game_activity.player_two_colour"
     }
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
@@ -24,11 +27,13 @@ class GameActivity : AppCompatActivity() {
     private var isUserTurn = true // Flag to track if it's the user's turn
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
+
     private val cells = mutableListOf<Cell>()
     private var numRows = 7; //hard coded for testing
     private var numCols = 6; //hard coded for testing
     private lateinit var primaryUser : UserEntity
     private lateinit var secondaryUser : UserEntity
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
@@ -37,6 +42,8 @@ class GameActivity : AppCompatActivity() {
                 intent.getLongExtra(GAME_ID, 0),
                 intent.getBooleanExtra(GameActivity.IS_SINGLE_PLAYER, false)
             )
+            gameViewModel.playerOneColor = intent.getIntExtra(PLAYER_ONE_COLOUR, Color.BLUE)
+            gameViewModel.playerTwoColor = intent.getIntExtra(PLAYER_TWO_COLOUR, Color.RED)
         }
 
 

@@ -1,5 +1,6 @@
 package com.example.mad_assignment_1
 
+import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,12 +30,19 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     private val _cellsData = MutableLiveData<List<Cell>>()
     private val _currentTurn = MutableLiveData<Int>()
     private val _win = MutableLiveData<Boolean>()
-    private val _isSinglePlayer = MutableLiveData<Boolean>()
 
-    val cells: LiveData<List<Cell>> get() = _cellsData
-    val playerTurn: LiveData<Int> get() = _currentTurn
-    val win: LiveData<Boolean> get() = _win
-    val isSinglePlayer: LiveData<Boolean> get() = _isSinglePlayer
+    private val _isSinglePlayer = MutableLiveData<Boolean>();
+    val cells: LiveData<List<Cell>>
+        get() = _cellsData
+    val playerTurn: LiveData<Int>
+        get() = _currentTurn
+    val win: LiveData<Boolean>
+        get() = _win
+    val isSinglePlayer: LiveData<Boolean>
+        get() = _isSinglePlayer
+    var playerOneColor = Color.BLUE
+    var playerTwoColor = Color.RED
+
     var numRows = 7
     var numCols = 6
 

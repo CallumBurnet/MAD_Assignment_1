@@ -1,11 +1,14 @@
 package com.example.mad_assignment_1
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.mad_assignment_1.databinding.FragmentNewGameBinding
@@ -16,6 +19,9 @@ class NewGame : Fragment() {
     private val menuViewModel: MenuInformationModel by viewModels<MenuInformationModel> {
         MenuInformationModel.Factory
     }
+    private val regex = Regex("^#[0-9a-fA-F]{6}$")
+    private var playerOneColour = Color.BLUE
+    private var playerTwoColour = Color.RED
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +44,8 @@ class NewGame : Fragment() {
         }
         binding.launchGameButton.setOnClickListener { view ->
             val intent = Intent(view.context, GameActivity::class.java)
+            intent.putExtra(GameActivity.PLAYER_ONE_COLOUR, playerOneColour)
+            intent.putExtra(GameActivity.PLAYER_TWO_COLOUR, playerTwoColour)
             val rows: Int
             val cols: Int
             val primaryUserId = arguments?.getLong("primaryUserID") ?: 0L
@@ -106,9 +114,25 @@ class NewGame : Fragment() {
                 menuViewModel.checkForGames(1, 2).first().gameID
             }
             val intent = Intent(view.context, GameActivity::class.java)
+            intent.putExtra(GameActivity.PLAYER_ONE_COLOUR, playerOneColour)
+            intent.putExtra(GameActivity.PLAYER_TWO_COLOUR, playerTwoColour)
             intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value)
             intent.putExtra(GameActivity.GAME_ID, gameID)
             startActivity(intent)
+        }
+        binding.colourPickerOne.doOnTextChanged { text, start, before, count ->
+            // I know, I know, a regex for input validation is a sin, but hey
+            if (regex.matches(text?: "") && text != null) {
+                playerOneColour = Color.parseColor(text.toString())
+                binding.colourPreviewOne.imageTintList = ColorStateList.valueOf(playerOneColour)
+            }
+        }
+        binding.colourPickerTwo.doOnTextChanged { text, start, before, count ->
+            // I know, I know, a regex for input validation is a sin, but hey
+            if (regex.matches(text?: "") && text != null) {
+                playerTwoColour = Color.parseColor(text.toString())
+                binding.colourPreviewTwo.imageTintList = ColorStateList.valueOf(playerTwoColour)
+            }
         }
         return binding.root
     }

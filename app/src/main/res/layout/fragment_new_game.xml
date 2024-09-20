@@ -34,6 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/newGameTitleText"
+        app:layout_constraintBottom_toTopOf="@id/gridSizeRadioGroup"
         app:layout_goneMarginTop="0dp"
         android:layout_marginTop="40dp"
         />
@@ -44,11 +45,11 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/newGameButtonsLinearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/gameModeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridSizeText"
-        android:layout_marginBottom="140dp">
+        android:layout_marginBottom="10dp">
 
         <RadioButton
             android:id="@+id/smallGridRadio"
@@ -82,7 +83,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gridSizeRadioGroup"
         app:layout_constraintBottom_toTopOf="@id/gameModeRatioGroup"
-        android:layout_marginTop= "10dp"
+        android:layout_marginTop="10dp"
         />
     <RadioGroup
         android:id="@+id/gameModeRatioGroup"
@@ -90,11 +91,10 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:gravity="center"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameModeText">
-
+        app:layout_constraintTop_toBottomOf="@+id/gameModeText"
+        app:layout_constraintBottom_toTopOf="@id/colourPickerTitle">
         <RadioButton
             android:id="@+id/pvpMode"
             android:layout_width="wrap_content"
@@ -110,6 +110,65 @@
             android:textSize="20sp" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/colourPickerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameModeRatioGroup"
+        app:layout_constraintBottom_toTopOf="@+id/colourPickerEntries"
+        android:text="Player Colour"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:id="@+id/colourPickerEntries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colourPickerTitle"
+        app:layout_constraintBottom_toTopOf="@+id/colourPickerPreview"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/colourPickerOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:hint="#FF0000"
+            android:maxLength="7" />
+        <EditText
+            android:id="@+id/colourPickerTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:maxLength="7"
+            android:hint="#0000FF" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/colourPickerPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/colourPickerEntries"
+        app:layout_constraintBottom_toTopOf="@id/newGameButtonsLinearLayout"
+        android:orientation="horizontal" >
+        <ImageView
+            android:id="@+id/colourPreviewOne"
+            android:layout_marginStart="10dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/player_one_button"/>
+        <ImageView
+            android:id="@+id/colourPreviewTwo"
+            android:layout_marginStart="10dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/player_two_button" />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/newGameButtonsLinearLayout"
         android:layout_width="wrap_content"
@@ -118,13 +177,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameModeRatioGroup">
+        app:layout_constraintTop_toBottomOf="@id/colourPickerPreview">
 
         <Button
             android:id="@+id/newGameBackButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:text="Back"
             android:textSize="18sp"
@@ -134,7 +193,7 @@
             android:id="@+id/launchGameButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:text="Start Game"
             android:textSize="18sp"
@@ -144,7 +203,7 @@
             android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:text="Resume Game"
             android:textSize="18sp"

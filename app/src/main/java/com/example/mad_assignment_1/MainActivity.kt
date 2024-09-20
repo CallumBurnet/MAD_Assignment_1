@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         val fm = supportFragmentManager;
          val primaryUser = menuViewModel.getPrimaryUser()
          val secondaryUser = menuViewModel.getSecondaryUser()
+         System.out.println("PRIMARY USER NAME" + primaryUser?.name)
+         System.out.println("PRIMARY ID" + primaryUser?.userID)
          newGameFragment.arguments = Bundle().apply {
              putLong("primaryUserID", primaryUser?.userID ?: 0L)
              putLong("secondaryUserID", secondaryUser?.userID ?: 0L)

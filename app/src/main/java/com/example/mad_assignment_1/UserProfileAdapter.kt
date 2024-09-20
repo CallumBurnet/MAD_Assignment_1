@@ -43,6 +43,15 @@ class UserProfileAdapter(
             binding.userName.text = userEntity.name
             binding.userWins.text = "Wins :${userEntity.wins}"
             binding.userLosses.text = "Losses : ${userEntity.losses}"
+            var gamesPlayed = userEntity.wins + userEntity.losses;
+            binding.gamesPlayed.text = "Games Played : ${gamesPlayed}"
+            val winPercentage = if (userEntity.losses + userEntity.wins > 0) {
+                val percentage = (userEntity.wins.toDouble() / (userEntity.losses + userEntity.wins)) * 100
+                String.format("%.2f", percentage) // Formats to 2 decimal places
+            } else {
+                0.00 // Default to 0.00 if no games have been played
+            }
+            binding.winPercentage.text = "Win Percentage : ${winPercentage} %"
 
             // Retrieve the image resource from the ViewModel
             val imageResId = menuInformationModel.getImageResource(userEntity.profilePic)

@@ -70,17 +70,11 @@ class MenuInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     fun getUsers(): LiveData<List<UserEntity>> {
         return _users
     }
-    fun addUser(user: UserProfile) {
+    fun addUser(user: UserEntity) {
         viewModelScope.launch {
             // Create the UserEntity with null for the auto-generated ID
-            val userEntity = UserEntity(
-                userID = 0, // This can be ignored, but for clarity, you can keep it as 0
-                name = user.userName,
-                profilePic = user.imageResId
-            )
-
             // Insert the user into the database
-            connectFourDao.insertUser(userEntity)
+            connectFourDao.insertUser(user)
 
             // Update the LiveData list on the main thread
             val updatedUsers = connectFourDao.getUsers()

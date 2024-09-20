@@ -18,13 +18,15 @@ abstract class ConnectFourDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context, scope: CoroutineScope): ConnectFourDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance =  Room.databaseBuilder(
+                val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ConnectFourDatabase::class.java,
                     "connect_four_database"
-                ).addCallback(ConnectFourDatabaseCallback(scope))
-                 .allowMainThreadQueries()
-                 .build()
+                )
+                    .fallbackToDestructiveMigration()  // Add this line here
+                    .addCallback(ConnectFourDatabaseCallback(scope))
+                    .allowMainThreadQueries() // Consider removing this for performance reasons
+                    .build()
                 INSTANCE = instance
                 instance
             }

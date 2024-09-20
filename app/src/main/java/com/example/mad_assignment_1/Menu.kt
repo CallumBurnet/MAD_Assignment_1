@@ -43,6 +43,7 @@ class Menu : Fragment() {
             } else {
                 binding.profileTwoImage.setImageResource(R.drawable.avatar2) // Default avatar if not found
             }
+
             binding.userTwoText.text = secondaryUser.name // Assuming you have a name field
         }
 

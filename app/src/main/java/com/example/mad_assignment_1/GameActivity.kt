@@ -21,12 +21,14 @@ class GameActivity : AppCompatActivity() {
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
     }
+    private var isUserTurn = true // Flag to track if it's the user's turn
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>()
     private var numRows = 7; //hard coded for testing
     private var numCols = 6; //hard coded for testing
-
+    private lateinit var primaryUser : UserEntity
+    private lateinit var secondaryUser : UserEntity
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
@@ -37,10 +39,15 @@ class GameActivity : AppCompatActivity() {
             )
         }
 
+
         super.onCreate(savedInstanceState)
         binding = GameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val primaryUserID = gameViewModel.getPrimaryUserId()
+        primaryUser = gameViewModel.getPlayerById(primaryUserID) ?: UserEntity(0, "Player 1", R.drawable.avatar, 0, 0)
+        val secondaryUserID = gameViewModel.getSecondaryUserId()
+        secondaryUser = gameViewModel.getPlayerById(secondaryUserID) ?: UserEntity(0, "Player 2", R.drawable.avatar, 0, 0)
         adapter = CellAdapter(gameViewModel)
         binding.undoButton.setOnClickListener { view  ->
             if (!gameViewModel.undo()) {
@@ -74,6 +81,7 @@ class GameActivity : AppCompatActivity() {
                 val winnerID = if (gameViewModel.playerTurn.value == 1) {
                     gameViewModel.getPrimaryUserId()?: return@observe
 
+
                 } else {
                     gameViewModel.getSecondaryUserId()?: return@observe
                 }
@@ -88,13 +96,22 @@ class GameActivity : AppCompatActivity() {
                     gameViewModel.updateUserStatistics(winnerID, loserID)
                 }
 
-                binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
+                binding.gameState.text = "${winnerID} has won!!"
             }
         }
 
         gameViewModel.playerTurn.observe(this) { turn ->
             if (gameViewModel.win.value != true) {
-                binding.gameState.text = "Player ${turn} turn"
+                if(turn == 1){
+
+                    binding.gameState.text = "${primaryUser.name}'s Turn"  // Assuming you have a TextView for player name
+                    //binding.gameState.text = "AAA ${player?.name} Turn "
+
+                }else{
+
+                    binding.gameState.text = "${secondaryUser.name}'s Turn"
+                }
+                //binding.gameState.text = "Player ${turn} turn"
             }
         }
         gameViewModel.win.observe(this)  { win ->

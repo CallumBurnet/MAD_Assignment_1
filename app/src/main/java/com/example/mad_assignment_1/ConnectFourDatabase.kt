@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [UserEntity::class, GameEntity::class, CellEntity::class], version = 2, exportSchema = false)
+@Database(entities = [UserEntity::class, GameEntity::class, CellEntity::class], version = 3, exportSchema = false)
 abstract class ConnectFourDatabase : RoomDatabase() {
     abstract fun connectFourDao(): ConnectFourDao
 

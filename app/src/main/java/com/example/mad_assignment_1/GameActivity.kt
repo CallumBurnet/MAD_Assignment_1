@@ -19,6 +19,7 @@ class GameActivity : AppCompatActivity() {
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
     }
+
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>()
@@ -68,6 +69,28 @@ class GameActivity : AppCompatActivity() {
             setResult(RESULT_OK)
             finish()
         }
+        gameViewModel.win.observe(this) { win ->
+            if (win) {
+                val winnerID = if (gameViewModel.playerTurn.value == 1) {
+                    gameViewModel.getPrimaryUserId()?: return@observe
+                } else {
+                    gameViewModel.getSecondaryUserId()?: return@observe
+                }
+
+                val loserID = if (winnerID == gameViewModel.getPrimaryUserId()) {
+                    gameViewModel.getSecondaryUserId()
+                } else {
+                    gameViewModel.getPrimaryUserId()
+                }
+
+                if (loserID != null) {
+                    gameViewModel.updateUserStatistics(winnerID, loserID)
+                }
+
+                binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
+            }
+        }
+
         gameViewModel.playerTurn.observe(this) { turn ->
             if (gameViewModel.win.value != true) {
                 binding.gameState.text = "Player ${turn} turn"
@@ -77,6 +100,7 @@ class GameActivity : AppCompatActivity() {
             if (win) {
                 if (gameViewModel.isSinglePlayer.value == true && gameViewModel.playerTurn.value == 2) {
                     binding.gameState.text = "Computer has won!!"
+
                 } else {
                     binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
                 }

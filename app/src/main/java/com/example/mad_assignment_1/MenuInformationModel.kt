@@ -10,6 +10,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.launch
 
 class MenuInformationModel(private val connectFourDao: ConnectFourDao) : ViewModel() {
+
+
     private val _gridSize = MutableLiveData<GridSize>()
     val gridSize: LiveData<GridSize> get() = _gridSize
 

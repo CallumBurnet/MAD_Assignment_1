@@ -7,7 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import kotlinx.coroutines.launch
 
 /**
  * Holds the state for the game
@@ -21,8 +23,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
  */
 class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewModel() {
     private var gameID: Long = 0;
-    private var userID: Long = 0;
-    private var opponentID: Long = 0;
+    private var primaryUserID: Long = 0;
+    private var secondanryUserID: Long = 0;
     private var moves = mutableListOf<Int>()
     private val _cellsData = MutableLiveData<List<Cell>>()
     private val _currentTurn = MutableLiveData<Int>()
@@ -58,7 +60,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
                 )
             )
         }
-        connectFourDao.updateGame(GameEntity(gameID, userID, opponentID, playerTurn.value!!, numRows, numCols))
+        connectFourDao.updateGame(GameEntity(gameID, primaryUserID, secondanryUserID, playerTurn.value!!, numRows, numCols))
     }
 
     /**
@@ -135,8 +137,8 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         this.gameID = gameID
         numRows = game.rows
         numCols = game.cols
-        userID = game.gameUserID
-        opponentID = game.opponentID
+        primaryUserID = game.gameUserID
+        secondanryUserID = game.opponentID
         _isSinglePlayer.value = isSinglePlayer
         reset()
         _currentTurn.value = game.playerTurn
@@ -212,6 +214,28 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
             }
         }
         return false
+    }
+
+    fun updateUserStatistics(winnerID: Long, loserID: Long) {
+        viewModelScope.launch {
+            val winner = connectFourDao.getUser(winnerID)
+            val loser = connectFourDao.getUser(loserID)
+
+            if (winner != null && loser != null) {
+                // Update wins and losses
+                winner.wins += 1
+                loser.losses += 1
+
+                connectFourDao.updateUser(winner)
+                connectFourDao.updateUser(loser)
+            }
+        }
+    }
+    fun getPrimaryUserId():Long{
+        return primaryUserID
+    }
+    fun getSecondaryUserId():Long{
+        return secondanryUserID
     }
 
     // Needed to add database to view model

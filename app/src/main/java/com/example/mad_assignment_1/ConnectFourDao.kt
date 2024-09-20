@@ -20,6 +20,8 @@ interface ConnectFourDao {
 
     @Update(entity = GameEntity::class)
     fun updateGame(game: GameEntity)
+    @Update(entity = UserEntity::class)
+    fun updateUser(user: UserEntity)
 
     @Query("DELETE FROM user_table")
     fun deleteAllUser()
@@ -34,7 +36,7 @@ interface ConnectFourDao {
     fun getUsers(): LiveData<List<UserEntity>>
 
     @Query("SELECT * FROM user_table WHERE userID=:userID")
-    fun getUser(userID: Int): UserEntity?
+    fun getUser(userID: Long): UserEntity?
 
     @Query("SELECT * FROM game_table WHERE gameID=:gameID")
     fun getGame(gameID: Long): GameEntity

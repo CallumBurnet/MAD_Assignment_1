@@ -16,6 +16,8 @@ data class UserEntity(
     @PrimaryKey(autoGenerate = true) val userID: Long,
     val name: String,
     val profilePic: Int,
+    var wins: Int = 0,
+    var losses: Int = 0
 )
 @Entity(tableName = "game_table",
     foreignKeys = [

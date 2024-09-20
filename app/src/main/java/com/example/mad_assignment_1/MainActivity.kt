@@ -40,6 +40,12 @@ class MainActivity : AppCompatActivity() {
 
      fun loadNewGameFragment() {
         val fm = supportFragmentManager;
+         val primaryUser = menuViewModel.getPrimaryUser()
+         val secondaryUser = menuViewModel.getSecondaryUser()
+         newGameFragment.arguments = Bundle().apply {
+             putLong("primaryUserID", primaryUser?.userID ?: 0L)
+             putLong("secondaryUserID", secondaryUser?.userID ?: 0L)
+         }
         val frag = fm.findFragmentById(R.id.mainMenuContainer);
         if (frag != null) {
             fm.beginTransaction().replace(R.id.mainMenuContainer, newGameFragment).commit()

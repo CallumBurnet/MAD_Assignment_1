@@ -19,13 +19,11 @@ class GameActivity : AppCompatActivity() {
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
     }
-
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>()
     private var numRows = 7; //hard coded for testing
     private var numCols = 6; //hard coded for testing
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -73,6 +71,7 @@ class GameActivity : AppCompatActivity() {
             if (win) {
                 val winnerID = if (gameViewModel.playerTurn.value == 1) {
                     gameViewModel.getPrimaryUserId()?: return@observe
+
                 } else {
                     gameViewModel.getSecondaryUserId()?: return@observe
                 }

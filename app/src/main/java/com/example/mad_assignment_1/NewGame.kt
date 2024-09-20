@@ -40,11 +40,16 @@ class NewGame : Fragment() {
             val intent = Intent(view.context, GameActivity::class.java)
             val rows: Int
             val cols: Int
-            val user = 1.toLong()
-            var opponent = 2.toLong()
+            val primaryUser = menuViewModel.getPrimaryUser()
+            val secondaryUser = menuViewModel.getSecondaryUser()
+
+            val primaryUserId = primaryUser?.userID?:1L
+                //1.toLong()
+            var secondaryUserId = secondaryUser?.userID?:3L
+                //2.toLong()
             // 3 is the default UserID for the computer
             if (menuViewModel.isSinglePlayer.value == true) {
-                opponent = 3;
+                secondaryUserId = 3;
             }
 
             when (menuViewModel.gridSize.value) {
@@ -65,7 +70,8 @@ class NewGame : Fragment() {
                     cols = 6
                 }
             }
-            val gameID = menuViewModel.newGame(rows, cols, user, opponent)
+            val gameID = menuViewModel.newGame(rows, cols, primaryUserId, secondaryUserId)
+
             intent.putExtra(GameActivity.IS_SINGLE_PLAYER, menuViewModel.isSinglePlayer.value ?: true)
             intent.putExtra(GameActivity.GAME_ID, gameID)
             startActivity(intent)

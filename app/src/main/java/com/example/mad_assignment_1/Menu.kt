@@ -26,6 +26,7 @@ class Menu : Fragment() {
         if (primaryUser != null) {
             val primaryImageResId = menuInformationModel.getImageResource(primaryUser.profilePic)
             if (primaryImageResId != null) {
+                System.out.println("PRIMARY USER ID" + primaryUser.userID)
                 binding.profileOneImage.setImageResource(primaryImageResId)
             } else {
                 binding.profileOneImage.setImageResource(R.drawable.avatar2) // Default avatar if not found
@@ -34,8 +35,10 @@ class Menu : Fragment() {
         }
 
         if (secondaryUser != null) {
+            System.out.println("SECONDARY USER ID" + secondaryUser.userID)
             val secondaryImageResId = menuInformationModel.getImageResource(secondaryUser.profilePic)
             if (secondaryImageResId != null) {
+
                 binding.profileTwoImage.setImageResource(secondaryImageResId)
             } else {
                 binding.profileTwoImage.setImageResource(R.drawable.avatar2) // Default avatar if not found

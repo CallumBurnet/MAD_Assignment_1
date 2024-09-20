@@ -41,6 +41,9 @@ class UserProfileAdapter(
 
         fun bind(userEntity: UserEntity) {
             binding.userName.text = userEntity.name
+            binding.userWins.text = "Wins :${userEntity.wins}"
+            binding.userLosses.text = "Losses : ${userEntity.losses}"
+
             // Retrieve the image resource from the ViewModel
             val imageResId = menuInformationModel.getImageResource(userEntity.profilePic)
 

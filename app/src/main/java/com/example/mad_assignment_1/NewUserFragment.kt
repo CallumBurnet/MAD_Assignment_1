@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 class NewUserFragment: Fragment() {
     private lateinit var binding: FragmentNewUserBinding
     private lateinit var menuInformationModel: MenuInformationModel
-    private lateinit var avatarAdapter: AvatarAdapter
     private var selectedAvatarResId: Int = R.drawable.avatar
 
 

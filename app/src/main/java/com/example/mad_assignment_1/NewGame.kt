@@ -26,15 +26,14 @@ class NewGame : Fragment() {
             MenuInformationModel.GridSize.SMALL -> binding.smallGridRadio.isChecked = true
             MenuInformationModel.GridSize.STANDARD -> binding.standardGridRadio.isChecked = true
             MenuInformationModel.GridSize.LARGE -> binding.largeGridRadio.isChecked = true
-
-            else -> binding.standardGridRadio.isChecked = true
+            else -> binding.standardGridRadio.isChecked = true // Default case
         }
+
         menuViewModel.isSinglePlayer.observe(viewLifecycleOwner) { isSinglePlayer ->
-            if (menuViewModel.checkForGames(1, 2).isNotEmpty() && isSinglePlayer == false
-                || menuViewModel.checkForGames(1, 3).isNotEmpty() && isSinglePlayer) {
-                binding.resumeButton.visibility = View.VISIBLE
-            } else {
-                binding.resumeButton.visibility = View.GONE
+            // Add null check for isSinglePlayer
+            if (isSinglePlayer != null) {
+                val hasGames = menuViewModel.checkForGames(1, if (isSinglePlayer) 3 else 2).isNotEmpty()
+                binding.resumeButton.visibility = if (hasGames) View.VISIBLE else View.GONE
             }
         }
         binding.launchGameButton.setOnClickListener { view ->

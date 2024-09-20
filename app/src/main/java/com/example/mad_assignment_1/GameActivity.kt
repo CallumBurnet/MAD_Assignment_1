@@ -108,8 +108,9 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+
         gameViewModel.playerTurn.observe(this) { turn ->
-            if (gameViewModel.win.value != true) {
+            if (gameViewModel.win.value != true && gameViewModel.draw.value != true) {
                 if(turn == 1){
 
                     binding.gameState.text = "${primaryUser.name}'s Turn"  // Assuming you have a TextView for player name
@@ -119,6 +120,12 @@ class GameActivity : AppCompatActivity() {
                     binding.gameState.text = "${secondaryUser.name}'s Turn"
                 }
             }
+        }
+        gameViewModel.draw.observe(this){ isDraw ->
+            if(isDraw){
+                binding.gameState.text = "Its a draw"
+            }
+
         }
 
         if (gameViewModel.isSinglePlayer.value == true) {

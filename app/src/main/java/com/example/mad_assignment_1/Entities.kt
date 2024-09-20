@@ -17,7 +17,8 @@ data class UserEntity(
     val name: String,
     val profilePic: Int,
     var wins: Int = 0,
-    var losses: Int = 0
+    var losses: Int = 0,
+    var draws: Int = 0
 )
 @Entity(tableName = "game_table",
     foreignKeys = [

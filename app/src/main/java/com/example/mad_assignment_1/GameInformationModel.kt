@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.room.util.query
 import kotlinx.coroutines.launch
 
 /**
@@ -30,6 +31,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     private val _cellsData = MutableLiveData<List<Cell>>()
     private val _currentTurn = MutableLiveData<Int>()
     private val _win = MutableLiveData<Boolean>()
+    private val _draw = MutableLiveData<Boolean>()
 
     private val _isSinglePlayer = MutableLiveData<Boolean>();
     val cells: LiveData<List<Cell>>
@@ -38,6 +40,8 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         get() = _currentTurn
     val win: LiveData<Boolean>
         get() = _win
+    val draw: LiveData<Boolean>
+        get() = _draw
     val isSinglePlayer: LiveData<Boolean>
         get() = _isSinglePlayer
     var playerOneColor = Color.BLUE
@@ -48,6 +52,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
 
     fun updateBoard() {
         _win.value = checkForWin()
+        _draw.value = checkForDraw()
         togglePlayer()
     }
 
@@ -134,6 +139,10 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         _currentTurn.value = if (_currentTurn.value == 1) 2 else 1
         Log.d("BOARD", "Current turn: ${_currentTurn.value}")
     }
+    private fun checkForDraw(): Boolean {
+        val boardCells = _cellsData.value ?: return false
+        return boardCells.all { it.player != 0 } && (_win.value != true)
+    }
 
     private fun checkForWin(): Boolean {
         val boardCells = cells.value ?: return false
@@ -194,15 +203,22 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         viewModelScope.launch {
             val winner = connectFourDao.getUser(winnerID)
             val loser = connectFourDao.getUser(loserID)
-
             if (winner != null && loser != null) {
-                winner.wins += 1
-                loser.losses += 1
+                if(draw.value == true){
+                    winner.draws += 1;
+                    loser.draws += 1;
+                }else{
+                    winner.wins += 1
+                    loser.losses += 1
+
+                }
+
                 connectFourDao.updateUser(winner)
                 connectFourDao.updateUser(loser)
             }
         }
     }
+
 
     fun getPrimaryUserId(): Long = primaryUserID
     fun getSecondaryUserId(): Long = secondaryUserID

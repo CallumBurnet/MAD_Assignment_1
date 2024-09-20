@@ -43,7 +43,7 @@ class UserProfileAdapter(
             binding.userName.text = userEntity.name
             binding.userWins.text = "Wins :${userEntity.wins}"
             binding.userLosses.text = "Losses : ${userEntity.losses}"
-            var gamesPlayed = userEntity.wins + userEntity.losses;
+            var gamesPlayed = userEntity.draws + userEntity.wins + userEntity.losses;
             binding.gamesPlayed.text = "Games Played : ${gamesPlayed}"
             val winPercentage = if (userEntity.losses + userEntity.wins > 0) {
                 val percentage = (userEntity.wins.toDouble() / (userEntity.losses + userEntity.wins)) * 100

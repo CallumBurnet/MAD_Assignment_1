@@ -2,6 +2,8 @@ package com.example.mad_assignment_1
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -19,13 +21,14 @@ class GameActivity : AppCompatActivity() {
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
     }
+    private var isUserTurn = true // Flag to track if it's the user's turn
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
     private val cells = mutableListOf<Cell>()
     private var numRows = 7; //hard coded for testing
     private var numCols = 6; //hard coded for testing
-
-
+    private lateinit var primaryUser : UserEntity
+    private lateinit var secondaryUser : UserEntity
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
@@ -36,10 +39,15 @@ class GameActivity : AppCompatActivity() {
             )
         }
 
+
         super.onCreate(savedInstanceState)
         binding = GameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val primaryUserID = gameViewModel.getPrimaryUserId()
+        primaryUser = gameViewModel.getPlayerById(primaryUserID) ?: UserEntity(0, "Player 1", R.drawable.avatar, 0, 0)
+        val secondaryUserID = gameViewModel.getSecondaryUserId()
+        secondaryUser = gameViewModel.getPlayerById(secondaryUserID) ?: UserEntity(0, "Player 2", R.drawable.avatar, 0, 0)
         adapter = CellAdapter(gameViewModel)
         binding.undoButton.setOnClickListener { view  ->
             if (!gameViewModel.undo()) {
@@ -68,30 +76,58 @@ class GameActivity : AppCompatActivity() {
             setResult(RESULT_OK)
             finish()
         }
+        gameViewModel.win.observe(this) { win ->
+            if (win) {
+                val winnerID = if (gameViewModel.playerTurn.value == 1) {
+                    gameViewModel.getPrimaryUserId()?: return@observe
+
+
+                } else {
+                    gameViewModel.getSecondaryUserId()?: return@observe
+                }
+
+                val loserID = if (winnerID == gameViewModel.getPrimaryUserId()) {
+                    gameViewModel.getSecondaryUserId()
+                } else {
+                    gameViewModel.getPrimaryUserId()
+                }
+
+                if (loserID != null) {
+                    gameViewModel.updateUserStatistics(winnerID, loserID)
+                }
+                var player = gameViewModel.getPlayerById(winnerID)
+                binding.gameState.text = "${player?.name} has won !!"
+
+            }
+        }
+
         gameViewModel.playerTurn.observe(this) { turn ->
             if (gameViewModel.win.value != true) {
-                binding.gameState.text = "Player ${turn} turn"
-            }
-        }
-        gameViewModel.win.observe(this)  { win ->
-            if (win) {
-                if (gameViewModel.isSinglePlayer.value == true && gameViewModel.playerTurn.value == 2) {
-                    binding.gameState.text = "Computer has won!!"
-                } else {
-                    binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
-                }
-            }
-        }
-        if (gameViewModel.isSinglePlayer.value == true) {
-            gameViewModel.playerTurn.observe(this) { turn ->
-                if (turn == 2) {
-                    do {
-                        val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
-                    } while (gameViewModel.dropDisc(0, dropPoint))
+                if(turn == 1){
+
+                    binding.gameState.text = "${primaryUser.name}'s Turn"  // Assuming you have a TextView for player name
+
+                }else{
+
+                    binding.gameState.text = "${secondaryUser.name}'s Turn"
                 }
             }
         }
 
+        if (gameViewModel.isSinglePlayer.value == true) {
+            gameViewModel.playerTurn.observe(this) { turn ->
+                if (turn == 2) {
+                    // Use a Handler to introduce a delay
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        do {
+                            val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
+                        } while (gameViewModel.dropDisc(0, dropPoint))
+                        gameViewModel.togglePlayer()
+                    }, 1500) // Delay for 2000 milliseconds (2 seconds)
+                }
+            }
+        }
         binding.recyclerView.layoutManager = GridLayoutManager(this, gameViewModel.numCols) //sets up the grid
         binding.recyclerView.adapter = adapter
     }

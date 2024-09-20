@@ -18,27 +18,42 @@ class Menu : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMenuBinding.inflate(inflater, container, false);
+        binding = FragmentMenuBinding.inflate(inflater, container, false)
 
         val primaryUser = menuInformationModel.getPrimaryUser()
         val secondaryUser = menuInformationModel.getSecondaryUser()
-        if(primaryUser != null){
-            binding.profileOneImage.setImageResource(primaryUser.imageResId)
-            binding.userOneText.setText("User 1")
-        }
-        if(secondaryUser != null){
-            binding.profileTwoImage.setImageResource(secondaryUser.imageResId)
-            binding.userTwoText.setText("User 2")
 
+        if (primaryUser != null) {
+            val primaryImageResId = menuInformationModel.getImageResource(primaryUser.profilePic)
+            if (primaryImageResId != null) {
+                System.out.println("PRIMARY USER ID" + primaryUser.userID)
+                binding.profileOneImage.setImageResource(primaryImageResId)
+            } else {
+                binding.profileOneImage.setImageResource(R.drawable.avatar2) // Default avatar if not found
+            }
+            binding.userOneText.text = primaryUser.name // Assuming you have a name field
         }
-        binding.newGameButton.setOnClickListener { view ->
+
+        if (secondaryUser != null) {
+            System.out.println("SECONDARY USER ID" + secondaryUser.userID)
+            val secondaryImageResId = menuInformationModel.getImageResource(secondaryUser.profilePic)
+            if (secondaryImageResId != null) {
+
+                binding.profileTwoImage.setImageResource(secondaryImageResId)
+            } else {
+                binding.profileTwoImage.setImageResource(R.drawable.avatar2) // Default avatar if not found
+            }
+
+            binding.userTwoText.text = secondaryUser.name // Assuming you have a name field
+        }
+
+        binding.newGameButton.setOnClickListener {
             (activity as MainActivity).loadNewGameFragment()
         }
-        binding.profileButton.setOnClickListener{view ->
+        binding.profileButton.setOnClickListener {
             (activity as MainActivity).loadUserProfileFragment()
         }
-        // Inflate the layout for this fragment
+
         return binding.root
     }
-
 }

@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         menuFragment = Menu()
         newGameFragment = NewGame()
         userViewFragment = UserViewFragment()
-
         setContentView(binding.root)
 
         if (savedInstanceState == null) {

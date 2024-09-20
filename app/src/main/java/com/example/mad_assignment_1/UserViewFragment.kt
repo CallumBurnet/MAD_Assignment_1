@@ -6,70 +6,73 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mad_assignment_1.databinding.FragmentUserViewBinding
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 
-class UserViewFragment: Fragment() {
+class UserViewFragment : Fragment() {
     private lateinit var binding: FragmentUserViewBinding
     private lateinit var adapter: UserProfileAdapter
     private lateinit var menuInformationModel: MenuInformationModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var isFirstPlayer:  Boolean = true;
+        var isFirstPlayer = true
 
         binding = FragmentUserViewBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Initialize ViewModel
         menuInformationModel = ViewModelProvider(requireActivity()).get(MenuInformationModel::class.java)
 
-        adapter = UserProfileAdapter(menuInformationModel.getUsers().value ?: emptyList()) { userProfile ->
-            // Handle item click
-            Toast.makeText(context, "User ${userProfile.userName} clicked", Toast.LENGTH_SHORT).show()
+        // Initialize the adapter
+        adapter = UserProfileAdapter(emptyList(), { userEntity ->
+            Toast.makeText(context, "User ${userEntity.name} clicked", Toast.LENGTH_SHORT).show()
+            onUserProfileClick(userEntity)
 
-            onUserProfileClick(userProfile)
-            if(isFirstPlayer){
-                menuInformationModel.setPrimaryUser(userProfile)
-                binding.addSecondUser.visibility = View.VISIBLE;
-            }else{
-                menuInformationModel.setSecondaryUser(userProfile)
+            if (isFirstPlayer) {
+                menuInformationModel.setPrimaryUser(userEntity)
+                binding.addSecondUser.visibility = View.VISIBLE
+            } else {
+                menuInformationModel.setSecondaryUser(userEntity)
             }
-        }
+        }, menuInformationModel) // Pass the ViewModel here
         binding.recyclerView.adapter = adapter
 
+        // Allocate image resources
 
-        menuInformationModel.getUsers().observe(viewLifecycleOwner, { users ->
+        // Observe user list
+        menuInformationModel.getUsers().observe(viewLifecycleOwner) { users ->
             adapter.updateUserProfiles(users)
-        })
+        }
 
-        //Add user button
-        binding.addUser.setOnClickListener{
+        // Add user button
+        binding.addUser.setOnClickListener {
             val newUserFragment = NewUserFragment()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.mainMenuContainer, newUserFragment)
                 .addToBackStack(null)
                 .commit()
         }
-        binding.addSecondUser.setOnClickListener{
-            isFirstPlayer = false;
+
+        binding.addSecondUser.setOnClickListener {
+            isFirstPlayer = false
         }
-        //return button
-        binding.returnButton.setOnClickListener{
-            val fm = requireActivity().supportFragmentManager;
-            fm.beginTransaction().replace(R.id.mainMenuContainer, Menu()).commit()
+
+        // Return button
+        binding.returnButton.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.mainMenuContainer, Menu())
+                .commit()
         }
 
         return binding.root
     }
-    fun onUserProfileClick(userProfile: UserProfile){
-        Toast.makeText(requireContext(), "UURR", Toast.LENGTH_SHORT).show()
+
+    private fun onUserProfileClick(userEntity: UserEntity) {
+        Toast.makeText(requireContext(), "Selected: ${userEntity.name}", Toast.LENGTH_SHORT).show()
     }
-
-
 }

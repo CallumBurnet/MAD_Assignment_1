@@ -1,5 +1,6 @@
 package com.example.mad_assignment_1
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -30,7 +31,7 @@ interface ConnectFourDao {
     fun deleteAllCells()
 
     @Query("SELECT * FROM user_table")
-    fun getUsers(): List<UserEntity>
+    fun getUsers(): LiveData<List<UserEntity>>
 
     @Query("SELECT * FROM user_table WHERE userID=:userID")
     fun getUser(userID: Int): UserEntity?

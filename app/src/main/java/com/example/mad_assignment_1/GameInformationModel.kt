@@ -150,12 +150,23 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
             val updatedCells = _cellsData.value?.toMutableList() ?: return@launch
 
             for (restoredCell in restoredCells) {
-                updatedCells[restoredCell.location] = updatedCells[restoredCell.location].copy(player = restoredCell.player)
-                moves[restoredCell.moveNo] = restoredCell.location
+                if (restoredCell.location in updatedCells.indices) {
+                    updatedCells[restoredCell.location] = updatedCells[restoredCell.location].copy(player = restoredCell.player)
+                } else {
+                    Log.e("GameInformationModel", "Invalid location: ${restoredCell.location}, list size: ${updatedCells.size}")
+                }
+
+                if (restoredCell.moveNo in moves.indices) {
+                    moves[restoredCell.moveNo] = restoredCell.location
+                } else {
+                    Log.e("GameInformationModel", "Invalid moveNo: ${restoredCell.moveNo}, moves size: ${moves.size}")
+                }
             }
+
             _cellsData.value = updatedCells
         }
     }
+
 
     fun togglePlayer() {
         _currentTurn.value = if (_currentTurn.value == 1) 2 else 1

@@ -122,7 +122,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         }
     }
 
-    private fun togglePlayer() {
+    fun togglePlayer() {
         _currentTurn.value = if (_currentTurn.value == 1) 2 else 1
         Log.d("BOARD", "Current turn: ${_currentTurn.value}")
     }

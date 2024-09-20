@@ -2,6 +2,8 @@ package com.example.mad_assignment_1
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -108,13 +110,17 @@ class GameActivity : AppCompatActivity() {
         if (gameViewModel.isSinglePlayer.value == true) {
             gameViewModel.playerTurn.observe(this) { turn ->
                 if (turn == 2) {
-                    do {
-                        val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
-                    } while (gameViewModel.dropDisc(0, dropPoint))
+                    // Use a Handler to introduce a delay
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        do {
+                            val dropPoint = Random.nextInt(0, gameViewModel.numCols - 1)
+                        } while (gameViewModel.dropDisc(0, dropPoint))
+                        gameViewModel.togglePlayer()
+                    }, 1500) // Delay for 2000 milliseconds (2 seconds)
                 }
             }
         }
-
         binding.recyclerView.layoutManager = GridLayoutManager(this, gameViewModel.numCols) //sets up the grid
         binding.recyclerView.adapter = adapter
     }

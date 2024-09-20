@@ -21,7 +21,9 @@ class GameActivity : AppCompatActivity() {
     }
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
-    private val cells = mutableListOf<Cell>();
+    private val cells = mutableListOf<Cell>()
+    private var numRows = 7; //hard coded for testing
+    private var numCols = 6; //hard coded for testing
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

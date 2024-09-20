@@ -126,7 +126,7 @@ class GameActivity : AppCompatActivity() {
         }
         gameViewModel.draw.observe(this){ isDraw ->
             if(isDraw){
-                binding.gameState.text = "Its a draw"
+                binding.gameState.text = "It's a draw !!"
             }
 
         }

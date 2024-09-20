@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
-
+//Class for the management of avatars
 class AvatarAdapter(
     private val avatars : List<Int>,
     private val onClick: (Int) -> Unit

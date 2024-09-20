@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mad_assignment_1.databinding.CellViewBinding
 import com.google.android.material.snackbar.Snackbar
-
+//Binding for the Cells ~ on click etc
 class CellAdapter(private val gameViewModel: GameInformationModel)
     : RecyclerView.Adapter<CellAdapter.CellViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CellViewHolder {

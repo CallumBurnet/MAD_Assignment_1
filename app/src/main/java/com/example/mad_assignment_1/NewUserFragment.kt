@@ -49,6 +49,11 @@ class NewUserFragment: Fragment() {
                .replace(R.id.mainMenuContainer, UserViewFragment())
                .commit()
         }
+        binding.returnButton.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainMenuContainer, UserViewFragment())
+                .commit()
+        }
         return binding.root
 
 

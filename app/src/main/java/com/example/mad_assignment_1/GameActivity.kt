@@ -110,7 +110,12 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-
+        gameViewModel.numRemainingMoves.observe(this){ moves ->
+            binding.numRemainingMoves.text = "${moves} moves remaining"
+        }
+        gameViewModel.numMovesPlayed.observe(this){ moves ->
+            binding.numMovesPlayed.text = "${moves} moves played"
+        }
         gameViewModel.playerTurn.observe(this) { turn ->
             if (gameViewModel.win.value != true && gameViewModel.draw.value != true) {
                 if(turn == 1){

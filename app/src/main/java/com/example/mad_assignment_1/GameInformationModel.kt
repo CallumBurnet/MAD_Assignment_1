@@ -32,7 +32,8 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     private val _currentTurn = MutableLiveData<Int>()
     private val _win = MutableLiveData<Boolean>()
     private val _draw = MutableLiveData<Boolean>()
-
+    private val _numRemainingMoves = MutableLiveData<Int>()
+    private val _numMovesPlayed = MutableLiveData<Int>()
     private val _isSinglePlayer = MutableLiveData<Boolean>();
     val cells: LiveData<List<Cell>>
         get() = _cellsData
@@ -44,6 +45,10 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         get() = _draw
     val isSinglePlayer: LiveData<Boolean>
         get() = _isSinglePlayer
+    val numRemainingMoves: LiveData<Int>
+        get() = _numRemainingMoves
+    val numMovesPlayed: LiveData<Int>
+        get() = _numMovesPlayed
     var playerOneColor = Color.BLUE
     var playerTwoColor = Color.RED
 
@@ -53,6 +58,8 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     fun updateBoard() {
         _win.value = checkForWin()
         _draw.value = checkForDraw()
+        _numRemainingMoves.value = getRemainingMoves()
+        _numMovesPlayed.value = getMovesPlayed()
         togglePlayer()
     }
 
@@ -69,11 +76,23 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         }
     }
 
+
     fun dropGame() {
         viewModelScope.launch {
             connectFourDao.deleteGame(gameID)
             connectFourDao.deleteGameCells(gameID)
         }
+    }
+    fun getMovesPlayed():Int{
+        val boardCells = _cellsData.value ?: return 0
+        val occupiedCells = boardCells.count { it.player != 0 }
+        return occupiedCells
+
+    }
+    fun getRemainingMoves(): Int {
+        val boardCells = _cellsData.value ?: return 0
+        val occupiedCells = boardCells.count { it.player != 0 }
+        return (numRows * numCols) - occupiedCells
     }
 
     fun dropDisc(row: Int, col: Int): Boolean {

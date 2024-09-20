@@ -17,18 +17,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/gameState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Current Player"
-        android:textStyle="bold"
-        android:textSize="25sp"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Current Player"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/controlButtons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-        app:layout_constraintBottom_toTopOf="@id/controlButtons" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+    <TextView
+        android:id="@+id/numRemainingMoves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toTopOf="@+id/gameState"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+    <TextView
+        android:id="@+id/numMovesPlayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toTopOf="@+id/gameState"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/controlButtons"
@@ -104,6 +123,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

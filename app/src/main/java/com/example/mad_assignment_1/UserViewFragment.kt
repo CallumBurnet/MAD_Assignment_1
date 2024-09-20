@@ -44,7 +44,6 @@ class UserViewFragment : Fragment() {
         if(isInsufficientPlayers){
             Toast.makeText(requireContext(), "Not enough players selected", Toast.LENGTH_LONG).show()
         }
-        // Allocate image resources
 
         // Observe user list
         menuInformationModel.getUsers().observe(viewLifecycleOwner) { users ->

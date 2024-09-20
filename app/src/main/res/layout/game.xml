@@ -15,8 +15,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/gameState"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/light_blue"/>
 
     <TextView
         android:id="@+id/gameState"
@@ -28,6 +30,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/controlButtons"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
@@ -53,7 +56,6 @@
         android:id="@+id/controlButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

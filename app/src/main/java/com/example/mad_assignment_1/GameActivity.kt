@@ -24,13 +24,8 @@ class GameActivity : AppCompatActivity() {
     private val gameViewModel: GameInformationModel by viewModels {
         GameInformationModel.Factory
     }
-    private var isUserTurn = true // Flag to track if it's the user's turn
     private lateinit var binding: GameBinding
     private lateinit var adapter: CellAdapter
-
-    private val cells = mutableListOf<Cell>()
-    private var numRows = 7; //hard coded for testing
-    private var numCols = 6; //hard coded for testing
     private lateinit var primaryUser : UserEntity
     private lateinit var secondaryUser : UserEntity
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,9 +61,11 @@ class GameActivity : AppCompatActivity() {
             gameViewModel.reset()
         }
         binding.exitControlsButton.setOnClickListener { _ ->
+            hideGameControls()
             showControls()
         }
         binding.cancelExitButton.setOnClickListener { _ ->
+            showGameControls()
             hideControls()
         }
         binding.pauseButton.setOnClickListener { _ ->
@@ -173,5 +170,15 @@ class GameActivity : AppCompatActivity() {
         binding.pauseButton.visibility = View.GONE
         binding.exitButton.visibility = View.GONE
         binding.exitControlsButton.visibility = View.VISIBLE
+    }
+    private fun hideGameControls(){
+        binding.resetButton.visibility = View.GONE
+        binding.undoButton.visibility = View.GONE
+        binding.exitButton.visibility = View.GONE
+    }
+    private fun showGameControls(){
+        binding.resetButton.visibility = View.VISIBLE
+        binding.undoButton.visibility = View.VISIBLE
+        binding.exitButton.visibility = View.VISIBLE
     }
 }

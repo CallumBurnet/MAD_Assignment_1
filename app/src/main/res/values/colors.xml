@@ -7,4 +7,6 @@
     <color name = "red">#fc0303</color>
     <color name="player_one">#0000ff</color>
     <color name="player_two">#ff0000</color>
+    <color name = "light_blue">#0086F9 </color>
+
 </resources>

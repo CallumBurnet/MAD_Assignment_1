@@ -95,8 +95,9 @@ class GameActivity : AppCompatActivity() {
                 if (loserID != null) {
                     gameViewModel.updateUserStatistics(winnerID, loserID)
                 }
+                var player = gameViewModel.getPlayerById(winnerID)
+                binding.gameState.text = "${player?.name} has won !!"
 
-                binding.gameState.text = "${winnerID} has won!!"
             }
         }
 
@@ -105,25 +106,14 @@ class GameActivity : AppCompatActivity() {
                 if(turn == 1){
 
                     binding.gameState.text = "${primaryUser.name}'s Turn"  // Assuming you have a TextView for player name
-                    //binding.gameState.text = "AAA ${player?.name} Turn "
 
                 }else{
 
                     binding.gameState.text = "${secondaryUser.name}'s Turn"
                 }
-                //binding.gameState.text = "Player ${turn} turn"
             }
         }
-        gameViewModel.win.observe(this)  { win ->
-            if (win) {
-                if (gameViewModel.isSinglePlayer.value == true && gameViewModel.playerTurn.value == 2) {
-                    binding.gameState.text = "Computer has won!!"
 
-                } else {
-                    binding.gameState.text = "Player ${gameViewModel.playerTurn.value} has won!!"
-                }
-            }
-        }
         if (gameViewModel.isSinglePlayer.value == true) {
             gameViewModel.playerTurn.observe(this) { turn ->
                 if (turn == 2) {

@@ -199,6 +199,7 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
     fun getPrimaryUserId(): Long = primaryUserID
     fun getSecondaryUserId(): Long = secondaryUserID
     fun getPlayerById(id: Long): UserEntity? {
+
         return connectFourDao.getUser(id) // This will return null if the user is not found
     }
     companion object {

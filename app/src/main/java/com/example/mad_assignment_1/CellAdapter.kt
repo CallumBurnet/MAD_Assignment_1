@@ -1,5 +1,6 @@
 package com.example.mad_assignment_1
 
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,12 @@ class CellAdapter(private val gameViewModel: GameInformationModel)
     : RecyclerView.Adapter<CellAdapter.CellViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CellViewHolder {
         val binding = CellViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CellViewHolder(binding, parent.context as LifecycleOwner)
+        return CellViewHolder(
+            binding,
+            parent.context as LifecycleOwner,
+            gameViewModel.playerOneColor,
+            gameViewModel.playerTwoColor
+        )
     }
 
     override fun onBindViewHolder(holder: CellViewHolder, position: Int) {
@@ -27,9 +33,13 @@ class CellAdapter(private val gameViewModel: GameInformationModel)
     }
 
     class CellViewHolder(private val binding: CellViewBinding,
-                         private val lifecycleOwner: LifecycleOwner)
-        : RecyclerView.ViewHolder(binding.root) {
+                         private val lifecycleOwner: LifecycleOwner,
+                         private val playerOneColor: Int,
+                         private val playerTwoColor: Int)
+    : RecyclerView.ViewHolder(binding.root) {
         fun bind(cell: Cell, gameViewModel: GameInformationModel) {
+            binding.playerOneCoin.imageTintList = ColorStateList.valueOf(playerOneColor)
+            binding.playerTwoCoin.imageTintList = ColorStateList.valueOf(playerTwoColor)
             if (cell.player == 1) {
                 binding.playerOneCoin.visibility = View.VISIBLE
                 binding.playerTwoCoin.visibility = View.GONE

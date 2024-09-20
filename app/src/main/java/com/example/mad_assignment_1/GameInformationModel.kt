@@ -1,5 +1,6 @@
 package com.example.mad_assignment_1
 
+import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +37,8 @@ class GameInformationModel(private val connectFourDao: ConnectFourDao) : ViewMod
         get() = _win
     val isSinglePlayer: LiveData<Boolean>
         get() = _isSinglePlayer
+    var playerOneColor = Color.BLUE
+    var playerTwoColor = Color.RED
     var numRows = 7
     var numCols = 6
 
